@@ -23,7 +23,7 @@ import {
     editable_columns,
     propagating_columns,
     searchable_columns,
-} from "./constants.js"
+} from "./columns.js"
 import {
     formatTime,
     getNextIndex,

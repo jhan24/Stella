@@ -33,7 +33,7 @@ import {
 import { getSelectedRows } from "./componentUtils.js";
 
 // React components
-import Navbar from "./Navbar.js";
+import Navbar from "./components/navbar/Navbar.js";
 
 let playlistCount = 0;
 let playlistTicking = false;

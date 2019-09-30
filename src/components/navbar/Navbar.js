@@ -1,7 +1,7 @@
 // @flow
 
 import React from "react";
-import { getSelectedRows } from "./componentUtils.js";
+import { getSelectedRows } from "../../componentUtils.js";
 
 type Props = any;
 type State = any;
@@ -29,7 +29,7 @@ export default class Navbar extends React.Component<Props, State> {
         (event.currentTarget: HTMLInputElement);
         this.setState({ search: event.currentTarget.value });
     };
-    onSearchType = type => (event: SyntheticEvent<>) => {
+    onSearchType = (type: number) => (event: SyntheticEvent<>) => {
         this.setState({ selected: type });
     };
     addNext = (event: SyntheticEvent<>) => {
@@ -59,7 +59,7 @@ export default class Navbar extends React.Component<Props, State> {
             )
         );
     };
-    updateRating = new_rating => (event: SyntheticEvent<>) => {
+    updateRating = (new_rating: number) => (event: SyntheticEvent<>) => {
         let selected: any = document.getElementsByClassName("table-selected");
         let list = this.props.current_playlist;
         if (selected.length > 0 && selected[0].classList.contains("song-row")) {

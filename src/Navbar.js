@@ -101,7 +101,7 @@ export default class Navbar extends React.Component {
                     onMouseEnter={this.onMouseEnter}
                     onMouseLeave={this.onMouseLeave}
                 >
-                    <a className="navbar-brand">Audio Player</a>
+                    <a className="navbar-brand">Stella</a>
                     <button
                         className="navbar-toggler"
                         type="button"
@@ -266,7 +266,7 @@ export default class Navbar extends React.Component {
                     id="selected-navbar"
                     className="navbar navbar-expand-lg navbar-light bg-light"
                 >
-                    <a className="navbar-brand">Audio Player</a>
+                    <a className="navbar-brand">Stella</a>
                     <button
                         className="navbar-toggler"
                         type="button"

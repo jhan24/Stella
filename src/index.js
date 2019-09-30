@@ -10,12 +10,12 @@
  */
 
 // Library imports
-import React from "react"
-import ReactDOM from "react-dom"
-import { BrowserRouter } from "react-router-dom"
-import { Route, withRouter } from "react-router-dom"
-import axios from "axios"
-import "./styles.css"
+import React from "react";
+import ReactDOM from "react-dom";
+import { BrowserRouter } from "react-router-dom";
+import { Route, withRouter } from "react-router-dom";
+import axios from "axios";
+import "./styles.css";
 
 // Project utility imports
 import {
@@ -23,27 +23,27 @@ import {
     editable_columns,
     propagating_columns,
     searchable_columns,
-} from "./columns.js"
+} from "./columns.js";
 import {
     formatTime,
     getNextIndex,
     removeActiveNavbar,
     shuffle,
-} from "./utils.js"
-import { getSelectedRows } from "./componentUtils.js"
+} from "./utils.js";
+import { getSelectedRows } from "./componentUtils.js";
 
 // React components
-import Navbar from "./Navbar.js"
+import Navbar from "./Navbar.js";
 
-let playlistCount = 0
-let playlistTicking = false
+let playlistCount = 0;
+let playlistTicking = false;
 
-axios.defaults.baseURL = "http://stella.test"
-const activeColor = "#91BBFF"
-const inactiveColor = "black"
+axios.defaults.baseURL = "http://stella.test";
+const activeColor = "#91BBFF";
+const inactiveColor = "black";
 
-const pageLength = 50
-const maxPlaylistSize = 500
+const pageLength = 50;
+const maxPlaylistSize = 500;
 
 // SHARED SONG LIST FUNCTIONS ==============================================
 const tableRowSelect = (event, table_type, row_class) => {
@@ -54,120 +54,120 @@ const tableRowSelect = (event, table_type, row_class) => {
     ) {
         if (!event.ctrlKey && !event.shiftKey) {
             // normal select = clear all selected, and select current and only current (also make it pivot)
-            let selected = document.getElementsByClassName("table-selected")
+            let selected = document.getElementsByClassName("table-selected");
             while (selected.length > 0) {
-                selected[0].classList.remove("table-selected")
+                selected[0].classList.remove("table-selected");
             }
-            let pivot = document.getElementsByClassName("pivot-selection")
+            let pivot = document.getElementsByClassName("pivot-selection");
             while (pivot.length > 0) {
-                pivot[0].classList.remove("pivot-selection")
+                pivot[0].classList.remove("pivot-selection");
             }
-            event.currentTarget.classList.add("table-selected")
-            event.currentTarget.classList.add("pivot-selection")
+            event.currentTarget.classList.add("table-selected");
+            event.currentTarget.classList.add("pivot-selection");
         } else if (event.ctrlKey) {
             // if control click, toggle the element's selected property
-            event.currentTarget.classList.toggle("table-selected")
+            event.currentTarget.classList.toggle("table-selected");
         } else if (event.shiftKey) {
             // if shift click, select all the elements from pivot to current inclusive
             let pivotIndex = document.getElementsByClassName(
                 "pivot-selection"
-            )[0].rowIndex
-            let currentIndex = event.currentTarget.rowIndex
-            let table = document.getElementById(table_type)
-            let low = currentIndex
-            let high = pivotIndex
+            )[0].rowIndex;
+            let currentIndex = event.currentTarget.rowIndex;
+            let table = document.getElementById(table_type);
+            let low = currentIndex;
+            let high = pivotIndex;
 
-            let selected = document.getElementsByClassName("table-selected")
+            let selected = document.getElementsByClassName("table-selected");
             while (selected.length > 0) {
-                selected[0].classList.remove("table-selected")
+                selected[0].classList.remove("table-selected");
             }
 
             if (currentIndex > pivotIndex) {
-                low = pivotIndex
-                high = currentIndex
+                low = pivotIndex;
+                high = currentIndex;
             }
             for (let i = low; i <= high; i++) {
-                table.rows[i].classList.add("table-selected")
+                table.rows[i].classList.add("table-selected");
             }
         }
     } else {
         // first clear all (there could be things selected in other tables)
-        let selected = document.getElementsByClassName("table-selected")
+        let selected = document.getElementsByClassName("table-selected");
         while (selected.length > 0) {
-            selected[0].classList.remove("table-selected")
+            selected[0].classList.remove("table-selected");
         }
-        let pivot = document.getElementsByClassName("pivot-selection")
+        let pivot = document.getElementsByClassName("pivot-selection");
         while (pivot.length > 0) {
-            pivot[0].classList.remove("pivot-selection")
+            pivot[0].classList.remove("pivot-selection");
         }
 
         // nothing selected before, we select the current object and make it the pivot (for use on shift click)
-        event.currentTarget.classList.add("table-selected")
-        event.currentTarget.classList.add("pivot-selection")
+        event.currentTarget.classList.add("table-selected");
+        event.currentTarget.classList.add("pivot-selection");
     }
 
     // update nav-bar if necessary
-    let selected = document.getElementsByClassName("table-selected")
-    let selected_navbar = document.getElementById("selected-navbar")
+    let selected = document.getElementsByClassName("table-selected");
+    let selected_navbar = document.getElementById("selected-navbar");
     if (selected.length > 1) {
         document.getElementById("selected-counter").innerHTML =
-            selected.length + " Selected"
-        selected_navbar.style.pointerEvents = "auto"
-        selected_navbar.style.opacity = 100
+            selected.length + " Selected";
+        selected_navbar.style.pointerEvents = "auto";
+        selected_navbar.style.opacity = 100;
     } else {
-        selected_navbar.style.pointerEvents = "none"
-        selected_navbar.style.opacity = 0
+        selected_navbar.style.pointerEvents = "none";
+        selected_navbar.style.opacity = 0;
     }
 
     // clear navbar rating stars
-    let rating_stars = document.getElementsByClassName("navbar-rating")
+    let rating_stars = document.getElementsByClassName("navbar-rating");
     for (let i = 0; i < rating_stars.length; i++) {
-        rating_stars[i].innerHTML = "star_border"
+        rating_stars[i].innerHTML = "star_border";
     }
-}
+};
 
 const showSongDropdown = (event, target_id, top, left, position) => {
     // get status of dropdown in question
-    let current = document.getElementById(target_id)
+    let current = document.getElementById(target_id);
     if (current == null) {
-        return
+        return;
     }
 
-    let status = 0
+    let status = 0;
     if (current.classList.contains("show")) {
-        status = 1
+        status = 1;
     }
 
     if (top != null) {
-        current.style.top = top
-        current.style.left = left
-        current.style.position = position
+        current.style.top = top;
+        current.style.left = left;
+        current.style.position = position;
     }
 
     // hide all dropdowns
-    removeDropdowns()
+    removeDropdowns();
 
     // toggle current one accordingly
     if (status === 0) {
-        current.classList.toggle("show")
+        current.classList.toggle("show");
     }
-}
+};
 
 const removeDropdowns = () => {
-    let dropdowns = document.getElementsByClassName("dropdown-menu show")
+    let dropdowns = document.getElementsByClassName("dropdown-menu show");
     while (dropdowns.length > 0) {
-        dropdowns[0].classList.remove("show")
+        dropdowns[0].classList.remove("show");
     }
-}
+};
 
 const renderContextMenu = (event, type, row_type) => {
     // hide other dropdowns before displaying context menu
-    let dropdowns = document.getElementsByClassName("dropdown-menu show")
+    let dropdowns = document.getElementsByClassName("dropdown-menu show");
     while (dropdowns.length > 0) {
-        dropdowns[0].classList.remove("show")
+        dropdowns[0].classList.remove("show");
     }
 
-    let contextMenu = null
+    let contextMenu = null;
     // check if right-clicked target is table-selected. if so, use the current table-selections
     if (
         event.currentTarget != null &&
@@ -176,90 +176,95 @@ const renderContextMenu = (event, type, row_type) => {
         // get number of selected items - if 0, display nothing. if 1, display single-menu options. if multiple, display multi-menu options
         let selected = document.getElementsByClassName(
             "table-selected " + row_type
-        )
+        );
         if (selected.length === 1) {
-            contextMenu = document.getElementById(type + "-single-context-menu")
+            contextMenu = document.getElementById(
+                type + "-single-context-menu"
+            );
         } else {
-            contextMenu = document.getElementById(type + "-multi-context-menu")
+            contextMenu = document.getElementById(type + "-multi-context-menu");
         }
     } else {
         // current target is not table-selected, thus, make it table-selected and clear all other selections
-        let selected = document.getElementsByClassName("table-selected")
+        let selected = document.getElementsByClassName("table-selected");
         while (selected.length > 0) {
-            selected[0].classList.remove("table-selected")
+            selected[0].classList.remove("table-selected");
         }
-        event.currentTarget.classList.add("table-selected")
-        contextMenu = document.getElementById(type + "-single-context-menu")
+        event.currentTarget.classList.add("table-selected");
+        contextMenu = document.getElementById(type + "-single-context-menu");
     }
 
     // move context menu to cursor position, then display
-    contextMenu.style.left = event.clientX - 10 + "px"
-    contextMenu.style.top = event.clientY + 10 + "px"
-    contextMenu.classList.add("show")
-}
+    contextMenu.style.left = event.clientX - 10 + "px";
+    contextMenu.style.top = event.clientY + 10 + "px";
+    contextMenu.classList.add("show");
+};
 
 // REACT COMPONENTS ========================================================================================
 class WelcomeTest extends React.Component {
     constructor(props) {
-        super(props)
+        super(props);
         this.state = {
             text: "Welcome",
-        }
+        };
     }
     render() {
-        const text = this.state.text
-        return <div style={{ margin: 5 }}>{text}</div>
+        const text = this.state.text;
+        return <div style={{ margin: 5 }}>{text}</div>;
     }
 }
 
 class Song extends React.Component {
     constructor(props) {
-        super(props)
+        super(props);
         this.state = {
             hovering: false,
-        }
+        };
     }
 
     onMouseOver = event => {
-        this.setState({ hovering: true })
-    }
+        this.setState({ hovering: true });
+    };
     onMouseOut = event => {
-        this.setState({ hovering: false })
-    }
+        this.setState({ hovering: false });
+    };
     onPlayClick = event => {
-        this.props.onSongPlay(this.props.position)
-    }
+        this.props.onSongPlay(this.props.position);
+    };
     addNext = event => {
-        this.props.addToPlaylist([this.props.song_info], 1)
-    }
+        this.props.addToPlaylist([this.props.song_info], 1);
+    };
     addQueue = event => {
-        this.props.addToPlaylist([this.props.song_info], 0)
-    }
+        this.props.addToPlaylist([this.props.song_info], 0);
+    };
     editInfo = event => {
-        this.props.editInfo("song", [this.props.song_info])
-    }
+        this.props.editInfo("song", [this.props.song_info]);
+    };
     showMenu = event => {
-        showSongDropdown(event, "song-dropdown-menu-" + this.props.song_info.id)
-    }
+        showSongDropdown(
+            event,
+            "song-dropdown-menu-" + this.props.song_info.id
+        );
+    };
     onClick = event => {
-        tableRowSelect(event, "song-table", "song-row")
-    }
+        tableRowSelect(event, "song-table", "song-row");
+    };
     updateRating = new_rating => event => {
-        this.props.updateRatings(new_rating, [this.props.song_info.id])
-    }
+        this.props.updateRatings(new_rating, [this.props.song_info.id]);
+    };
     onAlbumLink = event => {
         if (this.props.album_view !== true) {
             this.props.albumClick(
                 this.props.song_info.album,
                 this.props.song_info.album_artist
-            )
+            );
         }
-    }
+    };
     onArtistLink = event => {
-        this.props.artistClick(this.props.song_info.artist)
-    }
+        this.props.artistClick(this.props.song_info.artist);
+    };
     render() {
-        const song_info = this.props.song_info
+        const song_info = this.props.song_info;
         // first column shows either the position in the list or the play button
         const firstColumn = this.state.hovering ? (
             <i
@@ -272,7 +277,7 @@ class Song extends React.Component {
             song_info.track_number
         ) : (
             this.props.position + 1 + this.props.page * pageLength
-        )
+        );
         // menu with playlist options and jump-to options (NOT YET IMPLEMENTED)
         const menuColumn = this.state.hovering ? (
             <a role="button" id="dropdownMenuSong" onClick={this.showMenu}>
@@ -286,17 +291,17 @@ class Song extends React.Component {
                     more_vert
                 </i>
             </a>
-        )
+        );
         const stars = [
             "star_border",
             "star_border",
             "star_border",
             "star_border",
             "star_border",
-        ]
-        let rating = Math.floor((song_info.rating + 32) / 64) + 1
+        ];
+        let rating = Math.floor((song_info.rating + 32) / 64) + 1;
         for (let i = 0; i < rating; i++) {
-            stars[i] = "star"
+            stars[i] = "star";
         }
         return (
             <tr
@@ -395,14 +400,14 @@ class Song extends React.Component {
                 </td>
                 <td style={{ overflow: "hidden" }}>{song_info.play_count}</td>
             </tr>
-        )
+        );
     }
 }
 
 class AlbumDescription extends React.Component {
     artistClick = event => {
-        this.props.artistClick(this.props.song.album_artist)
-    }
+        this.props.artistClick(this.props.song.album_artist);
+    };
     openImage = event => {
         if (this.props.song.image_id != null) {
             window.open(
@@ -410,11 +415,11 @@ class AlbumDescription extends React.Component {
                     "/api/song/" +
                     this.props.song.image_id +
                     "/picture?size=1000"
-            )
+            );
         }
-    }
+    };
     render() {
-        let song = this.props.song
+        let song = this.props.song;
         return (
             <div
                 style={{
@@ -508,7 +513,7 @@ class AlbumDescription extends React.Component {
                     <span>{song.genre !== "" ? " • " + song.genre : ""}</span>
                 </div>
             </div>
-        )
+        );
     }
 }
 
@@ -520,55 +525,46 @@ class SongList extends React.Component {
             this.props.total_size,
             this.props.request,
             this.props.data.data
-        )
-    }
+        );
+    };
     addNext = event => {
-        this.props.addToPlaylist(
-            getSelectedRows(this.props.data.data),
-            1
-        )
-    }
+        this.props.addToPlaylist(getSelectedRows(this.props.data.data), 1);
+    };
     addQueue = event => {
-        this.props.addToPlaylist(
-            getSelectedRows(this.props.data.data),
-            0
-        )
-    }
+        this.props.addToPlaylist(getSelectedRows(this.props.data.data), 0);
+    };
     editInfo = event => {
-        this.props.editInfo(
-            "song",
-            getSelectedRows(this.props.data.data)
-        )
-    }
+        this.props.editInfo("song", getSelectedRows(this.props.data.data));
+    };
     addAllToPlaylist = method => event => {
         if (
             this.props.total_size > pageLength &&
             this.props.data.data.length > 0
         ) {
-            this.props.addAllToPlaylist(method)
+            this.props.addAllToPlaylist(method);
         } else {
-            this.props.addToPlaylist(this.props.data.data, method)
+            this.props.addToPlaylist(this.props.data.data, method);
         }
-    }
+    };
     editAllInfo = event => {
-        this.props.editInfo("songs", null)
-    }
+        this.props.editInfo("songs", null);
+    };
     onContextMenu = event => {
-        event.preventDefault()
-        renderContextMenu(event, "song", "song-row")
-    }
+        event.preventDefault();
+        renderContextMenu(event, "song", "song-row");
+    };
     updateRatings = (new_rating, ids) => {
-        this.props.updateRatings(new_rating, ids)
-    }
+        this.props.updateRatings(new_rating, ids);
+    };
     showMenu = event => {
-        showSongDropdown(event, "full-dropdown-menu")
-    }
+        showSongDropdown(event, "full-dropdown-menu");
+    };
     render() {
-        const songs = this.props.data.data
+        const songs = this.props.data.data;
 
         // create the song elements
-        let trs = []
-        let total_length = 0
+        let trs = [];
+        let total_length = 0;
         for (let i = 0; i < songs.length; i++) {
             trs.push(
                 <Song
@@ -585,17 +581,17 @@ class SongList extends React.Component {
                     artistClick={this.props.artistClick}
                     editInfo={this.props.editInfo}
                 />
-            )
-            total_length = total_length + songs[i].length
+            );
+            total_length = total_length + songs[i].length;
         }
 
         // create the pagination elements
-        let lis = []
+        let lis = [];
         for (let i = 0; i < this.props.total_size; i = i + pageLength) {
-            let current_page = Math.floor(i / pageLength)
-            let classes = "page-item"
+            let current_page = Math.floor(i / pageLength);
+            let classes = "page-item";
             if (this.props.page === current_page) {
-                classes = classes + " active"
+                classes = classes + " active";
             }
             lis.push(
                 <li key={current_page} className={classes}>
@@ -607,10 +603,10 @@ class SongList extends React.Component {
                         {current_page + 1}
                     </a>
                 </li>
-            )
+            );
         }
 
-        let album_description = null
+        let album_description = null;
         if (this.props.album_view === true && songs.length > 0) {
             album_description = (
                 <AlbumDescription
@@ -620,11 +616,11 @@ class SongList extends React.Component {
                     addAllToPlaylist={this.addAllToPlaylist}
                     artistClick={this.props.artistClick}
                 />
-            )
+            );
         }
 
         // add bar for artist description if this is an artist detail page
-        let artist_description = null
+        let artist_description = null;
         if (this.props.artistDetails != null) {
             artist_description = (
                 <ArtistDescription
@@ -633,16 +629,16 @@ class SongList extends React.Component {
                     artistSongs={this.props.artistSongs}
                     albums={this.props.albums}
                 />
-            )
+            );
         }
 
-        let edit_info = null
+        let edit_info = null;
         if (this.props.total_size < 100) {
             edit_info = (
                 <a onClick={this.editAllInfo} className="dropdown-item">
                     Edit All Info
                 </a>
-            )
+            );
         }
 
         return (
@@ -829,53 +825,53 @@ class SongList extends React.Component {
                     {lis}
                 </ul>
             </div>
-        )
+        );
     }
     componentDidMount() {
-        this.props.updatePlaying()
+        this.props.updatePlaying();
     }
     componentDidUpdate() {
-        this.props.updatePlaying()
+        this.props.updatePlaying();
     }
 }
 
 class Card extends React.Component {
     constructor(props) {
-        super(props)
+        super(props);
         this.state = {
             hovering: false,
-        }
+        };
     }
 
     onMouseOver = event => {
-        this.setState({ hovering: true })
-    }
+        this.setState({ hovering: true });
+    };
     onMouseOut = event => {
-        this.setState({ hovering: false })
-    }
+        this.setState({ hovering: false });
+    };
     onContextMenu = event => {
-        event.preventDefault()
+        event.preventDefault();
         showSongDropdown(
             event,
             "card-dropdown-menu-" + this.props.index,
             event.clientY + 10 + "px",
             event.clientX + "px",
             "fixed"
-        )
-    }
+        );
+    };
     showMenu = event => {
-        event.stopPropagation()
+        event.stopPropagation();
         showSongDropdown(
             event,
             "card-dropdown-menu-" + this.props.index,
             "120px",
             "32px",
             "absolute"
-        )
-    }
+        );
+    };
     addToPlaylist = type => event => {
-        event.stopPropagation()
-        removeDropdowns()
+        event.stopPropagation();
+        removeDropdowns();
 
         if (this.props.albums === true) {
             axios
@@ -890,11 +886,11 @@ class Card extends React.Component {
                     },
                 })
                 .then(response => {
-                    this.props.addToPlaylist(response.data.data, type)
+                    this.props.addToPlaylist(response.data.data, type);
                 })
                 .catch(function(error) {
-                    console.log(error)
-                })
+                    console.log(error);
+                });
         } else {
             axios
                 .get("/api/search/songs", {
@@ -910,22 +906,22 @@ class Card extends React.Component {
                     },
                 })
                 .then(response => {
-                    this.props.addToPlaylist(response.data.data, type)
+                    this.props.addToPlaylist(response.data.data, type);
                 })
                 .catch(function(error) {
-                    console.log(error)
-                })
+                    console.log(error);
+                });
         }
-    }
+    };
     editInfo = event => {
-        event.stopPropagation()
-        removeDropdowns()
+        event.stopPropagation();
+        removeDropdowns();
         if (this.props.albums === true) {
             this.props.editInfo("card", {
                 specific: 1,
                 album_artist: "EQ:::" + this.props.info.album_artist,
                 album: "EQ:::" + this.props.info.album,
-            })
+            });
         } else {
             this.props.editInfo("card", {
                 specific: 1,
@@ -933,28 +929,28 @@ class Card extends React.Component {
                 album_artist_grouped: 1,
                 composer_grouped: 1,
                 publisher_grouped: 1,
-            })
+            });
         }
-    }
+    };
     cardClick = event => {
         if (this.props.albums === true) {
             this.props.albumClick(
                 this.props.info.album,
                 this.props.info.album_artist
-            )
+            );
         } else {
-            this.props.artistClick(this.props.info.artist)
+            this.props.artistClick(this.props.info.artist);
         }
-    }
+    };
 
     artistLabelClick = event => {
-        event.stopPropagation()
-        this.props.artistClick(this.props.info.album_artist)
-    }
+        event.stopPropagation();
+        this.props.artistClick(this.props.info.album_artist);
+    };
 
     render() {
-        let info = this.props.info
-        let image_id = this.props.info.image_id
+        let info = this.props.info;
+        let image_id = this.props.info.image_id;
         let dropdown_button = this.state.hovering ? (
             <a
                 style={{ position: "absolute", left: 160, top: 10 }}
@@ -966,7 +962,7 @@ class Card extends React.Component {
                     more_vert
                 </i>
             </a>
-        ) : null
+        ) : null;
 
         let labels = (
             <div style={{ position: "absolute", top: 201, left: 5 }}>
@@ -1001,7 +997,7 @@ class Card extends React.Component {
                 </div>
                 {dropdown_button}
             </div>
-        )
+        );
         if (this.props.albums === false) {
             labels = (
                 <div style={{ position: "absolute", top: 201, left: 5 }}>
@@ -1031,7 +1027,7 @@ class Card extends React.Component {
                     </div>
                     {dropdown_button}
                 </div>
-            )
+            );
         }
 
         return (
@@ -1096,16 +1092,16 @@ class Card extends React.Component {
                 />
                 {labels}
             </div>
-        )
+        );
     }
 }
 
 class ArtistDescription extends React.Component {
     artistSongs = event => {
         if (this.props.albums === true) {
-            this.props.artistSongs(this.props.artistDetails.artist)
+            this.props.artistSongs(this.props.artistDetails.artist);
         }
-    }
+    };
     openImage = event => {
         if (this.props.artistDetails.image_id != null) {
             window.open(
@@ -1113,13 +1109,13 @@ class ArtistDescription extends React.Component {
                     "/api/song/" +
                     this.props.artistDetails.image_id +
                     "/picture?size=1000"
-            )
+            );
         }
-    }
+    };
     render() {
-        let offset = 0
+        let offset = 0;
         if (this.props.artistDetails.artist_alt === "") {
-            offset = -25
+            offset = -25;
         }
         return (
             <div
@@ -1201,14 +1197,14 @@ class ArtistDescription extends React.Component {
                     </span>
                 </div>
             </div>
-        )
+        );
     }
 }
 
 class CardList extends React.Component {
     render() {
-        let list = this.props.data.data
-        let cards = []
+        let list = this.props.data.data;
+        let cards = [];
         if (this.props.albums === true) {
             for (let i = 0; i < list.length; i++) {
                 cards.push(
@@ -1222,7 +1218,7 @@ class CardList extends React.Component {
                         index={i}
                         editInfo={this.props.editInfo}
                     />
-                )
+                );
             }
         } else {
             for (let i = 0; i < list.length; i++) {
@@ -1237,17 +1233,17 @@ class CardList extends React.Component {
                         index={i}
                         editInfo={this.props.editInfo}
                     />
-                )
+                );
             }
         }
 
         // create the pagination elements
-        let lis = []
+        let lis = [];
         for (let i = 0; i < this.props.total_size; i = i + pageLength) {
-            let current_page = Math.floor(i / pageLength)
-            let classes = "page-item"
+            let current_page = Math.floor(i / pageLength);
+            let classes = "page-item";
             if (this.props.page === current_page) {
-                classes = classes + " active"
+                classes = classes + " active";
             }
             lis.push(
                 <li key={current_page} className={classes}>
@@ -1259,11 +1255,11 @@ class CardList extends React.Component {
                         {current_page + 1}
                     </a>
                 </li>
-            )
+            );
         }
 
         // add bar for artist description if this is an artist detail page
-        let artist_description = null
+        let artist_description = null;
         if (this.props.artistDetails != null) {
             artist_description = (
                 <ArtistDescription
@@ -1272,7 +1268,7 @@ class CardList extends React.Component {
                     artistSongs={this.props.artistSongs}
                     albums={this.props.albums}
                 />
-            )
+            );
         }
 
         return (
@@ -1283,120 +1279,120 @@ class CardList extends React.Component {
                     {lis}
                 </ul>
             </div>
-        )
+        );
     }
 }
 
 // for songs in the current playlist of songs being played
 class PlaylistSong extends React.Component {
     constructor(props) {
-        super(props)
+        super(props);
         this.state = {
             hovering: false,
-        }
+        };
     }
     onPlayClick = event => {
         let position =
             document.getElementById(
                 "playlist-song-item-" + this.props.song_info.playlist_id
-            ).rowIndex - 1
-        this.props.changeCurrentIndex(position)
-    }
+            ).rowIndex - 1;
+        this.props.changeCurrentIndex(position);
+    };
     onMouseOver = event => {
         if (
             !document
                 .getElementById("playlist-table")
                 .classList.contains("dragging")
         ) {
-            this.setState({ hovering: true })
+            this.setState({ hovering: true });
         }
-    }
+    };
     onMouseOut = event => {
         if (
             !document
                 .getElementById("playlist-table")
                 .classList.contains("dragging")
         ) {
-            this.setState({ hovering: false })
+            this.setState({ hovering: false });
         }
-    }
+    };
     addNext = event => {
-        this.props.addToPlaylist([this.props.song_info], 1)
-    }
+        this.props.addToPlaylist([this.props.song_info], 1);
+    };
     addQueue = event => {
-        this.props.addToPlaylist([this.props.song_info], 0)
-    }
+        this.props.addToPlaylist([this.props.song_info], 0);
+    };
     editInfo = event => {
-        this.props.editInfo("song", [this.props.song_info])
-    }
+        this.props.editInfo("song", [this.props.song_info]);
+    };
     onDragStart = event => {
-        let position = event.currentTarget.rowIndex - 1
-        event.dataTransfer.setData("text/plain", position)
-        document.getElementById("playlist-table").classList.add("dragging")
+        let position = event.currentTarget.rowIndex - 1;
+        event.dataTransfer.setData("text/plain", position);
+        document.getElementById("playlist-table").classList.add("dragging");
 
         // if dragged element isn't selected, clear all selections and select the current element
         if (
             event.currentTarget == null ||
             !event.currentTarget.classList.contains("table-selected")
         ) {
-            let selected = document.getElementsByClassName("table-selected")
+            let selected = document.getElementsByClassName("table-selected");
             while (selected.length > 0) {
-                selected[0].classList.remove("table-selected")
+                selected[0].classList.remove("table-selected");
             }
-            event.currentTarget.classList.add("table-selected")
+            event.currentTarget.classList.add("table-selected");
         }
 
-        let selected_navbar = document.getElementById("selected-navbar")
-        selected_navbar.style.pointerEvents = "none"
-        selected_navbar.style.opacity = 0
-    }
+        let selected_navbar = document.getElementById("selected-navbar");
+        selected_navbar.style.pointerEvents = "none";
+        selected_navbar.style.opacity = 0;
+    };
     onDragEnd = event => {
-        document.getElementById("playlist-table").classList.remove("dragging")
-    }
+        document.getElementById("playlist-table").classList.remove("dragging");
+    };
     // drag and drop events to allow reordering of playlist
     allowDrop = event => {
-        event.preventDefault()
-    }
+        event.preventDefault();
+    };
     onDragEnter = event => {
-        event.currentTarget.style.borderTop = "2px solid " + activeColor
-    }
+        event.currentTarget.style.borderTop = "2px solid " + activeColor;
+    };
     onDragLeave = event => {
-        event.currentTarget.style.borderTop = "1px solid gray"
-    }
+        event.currentTarget.style.borderTop = "1px solid gray";
+    };
     onDrop = event => {
-        event.preventDefault()
-        event.currentTarget.style.borderTop = "1px solid gray"
-        let new_position = event.currentTarget.rowIndex - 1
-        let selected = document.getElementsByClassName("table-selected")
-        let list = []
+        event.preventDefault();
+        event.currentTarget.style.borderTop = "1px solid gray";
+        let new_position = event.currentTarget.rowIndex - 1;
+        let selected = document.getElementsByClassName("table-selected");
+        let list = [];
         for (let i = selected.length - 1; i >= 0; i--) {
-            list.push(selected[i].rowIndex - 1)
+            list.push(selected[i].rowIndex - 1);
         }
-        this.props.onDrop(new_position, list)
-    }
+        this.props.onDrop(new_position, list);
+    };
     showMenu = event => {
         showSongDropdown(
             event,
             "playlist-dropdown-menu-" + this.props.song_info.playlist_id
-        )
-    }
+        );
+    };
     onClick = event => {
-        tableRowSelect(event, "playlist-table", "playlist-row")
-    }
+        tableRowSelect(event, "playlist-table", "playlist-row");
+    };
     updateRating = new_rating => event => {
-        this.props.updateRatings(new_rating, [this.props.song_info.id])
-    }
+        this.props.updateRatings(new_rating, [this.props.song_info.id]);
+    };
     albumClick = event => {
         this.props.albumClick(
             this.props.song_info.album,
             this.props.song_info.album_artist
-        )
-    }
+        );
+    };
     artistClick = event => {
-        this.props.artistClick(this.props.song_info.artist)
-    }
+        this.props.artistClick(this.props.song_info.artist);
+    };
     render() {
-        const song_info = this.props.song_info
+        const song_info = this.props.song_info;
         const firstColumn = this.state.hovering ? (
             <i
                 onClick={this.onPlayClick}
@@ -1406,7 +1402,7 @@ class PlaylistSong extends React.Component {
             </i>
         ) : (
             formatTime(song_info.length)
-        )
+        );
         if (this.props.notVisible === true) {
             return (
                 <tr
@@ -1419,7 +1415,7 @@ class PlaylistSong extends React.Component {
                         </span>
                     </td>
                 </tr>
-            )
+            );
         }
 
         const menuColumn = this.state.hovering ? (
@@ -1434,17 +1430,17 @@ class PlaylistSong extends React.Component {
                     more_vert
                 </i>
             </a>
-        )
+        );
         const stars = [
             "star_border",
             "star_border",
             "star_border",
             "star_border",
             "star_border",
-        ]
-        let rating = Math.floor((song_info.rating + 32) / 64) + 1
+        ];
+        let rating = Math.floor((song_info.rating + 32) / 64) + 1;
         for (let i = 0; i < rating; i++) {
-            stars[i] = "star"
+            stars[i] = "star";
         }
         return (
             <tr
@@ -1570,14 +1566,14 @@ class PlaylistSong extends React.Component {
                 </td>
                 <td style={{ overflow: "hidden" }}>{song_info.play_count}</td>
             </tr>
-        )
+        );
     }
 }
 
 class SearchFormRow extends React.Component {
     constructor(props) {
-        super(props)
-        this.state = {}
+        super(props);
+        this.state = {};
     }
     operatorChange = type => event => {
         this.props.updateFilter(
@@ -1586,8 +1582,8 @@ class SearchFormRow extends React.Component {
             this.props.data["value2"],
             type,
             this.props.index
-        )
-    }
+        );
+    };
     valueChange1 = event => {
         this.props.updateFilter(
             this.props.data["col"],
@@ -1595,8 +1591,8 @@ class SearchFormRow extends React.Component {
             this.props.data["value2"],
             this.props.data["op"],
             this.props.index
-        )
-    }
+        );
+    };
     valueChange2 = event => {
         this.props.updateFilter(
             this.props.data["col"],
@@ -1604,8 +1600,8 @@ class SearchFormRow extends React.Component {
             event.target.value,
             this.props.data["op"],
             this.props.index
-        )
-    }
+        );
+    };
     uploadFile = event => {
         this.props.updateFilter(
             this.props.data["col"],
@@ -1613,8 +1609,8 @@ class SearchFormRow extends React.Component {
             this.props.data["value2"],
             this.props.data["op"],
             this.props.index
-        )
-    }
+        );
+    };
     render() {
         if (this.props.data["col"] === "image") {
             return (
@@ -1644,7 +1640,7 @@ class SearchFormRow extends React.Component {
                         />
                     </div>
                 </div>
-            )
+            );
         }
         if (column_objects[this.props.data["col"]]["type"] === 0) {
             return (
@@ -1682,19 +1678,19 @@ class SearchFormRow extends React.Component {
                         </label>
                     </div>
                 </div>
-            )
+            );
         } else {
-            let col_size = "col-11"
+            let col_size = "col-11";
 
-            let additional_field = null
-            let op_selection = null
+            let additional_field = null;
+            let op_selection = null;
 
-            let col_type = "number"
+            let col_type = "number";
             if (column_objects[this.props.data["col"]]["type"] === 2) {
-                col_type = "date"
+                col_type = "date";
             }
             if (this.props.type !== "edit") {
-                col_size = "col-8"
+                col_size = "col-8";
                 op_selection = (
                     <div
                         id="search-button-group"
@@ -1752,9 +1748,9 @@ class SearchFormRow extends React.Component {
                             B
                         </label>
                     </div>
-                )
+                );
                 if (this.props.data["op"] === "BT") {
-                    col_size = "col-4"
+                    col_size = "col-4";
                     additional_field = (
                         <div className="col-4 mui-textfield">
                             <input
@@ -1778,10 +1774,10 @@ class SearchFormRow extends React.Component {
                                 {column_objects[this.props.data["col"]]["name"]}
                             </label>
                         </div>
-                    )
+                    );
                 }
             } else {
-                col_size = "col-11"
+                col_size = "col-11";
             }
 
             return (
@@ -1820,27 +1816,27 @@ class SearchFormRow extends React.Component {
                     </div>
                     {additional_field}
                 </div>
-            )
+            );
         }
     }
 }
 
 class EditModal extends React.Component {
     constructor(props) {
-        super(props)
-        let value = null
+        super(props);
+        let value = null;
         if (this.props.edit_data.length <= 50) {
             for (let i = 0; i < this.props.edit_data.length; i++) {
-                let temp = this.props.edit_data[i]["image_id"]
+                let temp = this.props.edit_data[i]["image_id"];
                 if (temp == null) {
-                    break
+                    break;
                 } else {
                     if (value === null) {
-                        value = temp
+                        value = temp;
                     } else {
                         if (value !== temp) {
-                            value = null
-                            break
+                            value = null;
+                            break;
                         }
                     }
                 }
@@ -1853,45 +1849,45 @@ class EditModal extends React.Component {
                 this.props.edit_data.length <= 50
                     ? this.props.edit_data.length
                     : ">50",
-        }
+        };
     }
     handleSubmit = event => {
-        event.preventDefault()
-        document.getElementById("edit-save").disabled = true
-        let editParams = new FormData()
-        let propagating_changes = {}
+        event.preventDefault();
+        document.getElementById("edit-save").disabled = true;
+        let editParams = new FormData();
+        let propagating_changes = {};
 
-        let data = this.state.data
+        let data = this.state.data;
         if (data.length === 0) {
-            this.props.closeModals()
-            return
+            this.props.closeModals();
+            return;
         }
 
         for (let i = 0; i < data.length; i++) {
-            let col = data[i]["col"]
-            let value1 = data[i]["value1"]
+            let col = data[i]["col"];
+            let value1 = data[i]["value1"];
 
             if (col === "image") {
                 if (value1 != null && value1.length > 0) {
-                    editParams.append(col, value1[0])
+                    editParams.append(col, value1[0]);
                 } else if (data.length === 1) {
-                    this.props.closeModals()
-                    return
+                    this.props.closeModals();
+                    return;
                 }
             }
 
             if (column_objects[col]["type"] === 1) {
                 // int type
-                value1 = parseInt(value1, 10)
+                value1 = parseInt(value1, 10);
                 if (isNaN(value1)) {
-                    continue
+                    continue;
                 }
             }
 
-            editParams.append(col, value1)
+            editParams.append(col, value1);
 
             if (propagating_columns.indexOf(col) >= 0) {
-                propagating_changes[col] = value1
+                propagating_changes[col] = value1;
             }
         }
 
@@ -1900,27 +1896,27 @@ class EditModal extends React.Component {
                 params: this.props.edit_info,
             })
             .then(response => {
-                this.props.onEditSuccess(propagating_changes, response)
+                this.props.onEditSuccess(propagating_changes, response);
             })
             .catch(function(error) {
-                console.log(error)
-            })
-    }
+                console.log(error);
+            });
+    };
     addFilter = type => event => {
-        let data = this.state.data
-        let value = ""
+        let data = this.state.data;
+        let value = "";
         if (this.props.edit_data.length <= 50) {
             for (let i = 0; i < this.props.edit_data.length; i++) {
-                let temp = this.props.edit_data[i][type]
+                let temp = this.props.edit_data[i][type];
                 if (temp == null || temp.toString().length === 0) {
-                    break
+                    break;
                 } else {
                     if (value === "") {
-                        value = temp.toString()
+                        value = temp.toString();
                     } else {
                         if (value !== temp.toString()) {
-                            value = ""
-                            break
+                            value = "";
+                            break;
                         }
                     }
                 }
@@ -1931,24 +1927,24 @@ class EditModal extends React.Component {
             value1: value,
             value2: "",
             op: "",
-        })
-        this.setState({ data: data })
-    }
+        });
+        this.setState({ data: data });
+    };
     updateFilter = (col, value1, value2, op, index) => {
-        let data = this.state.data
-        data[index]["col"] = col
-        data[index]["value1"] = value1
-        data[index]["value2"] = value2
-        data[index]["op"] = op
-        this.setState({ data: data })
-    }
+        let data = this.state.data;
+        data[index]["col"] = col;
+        data[index]["value1"] = value1;
+        data[index]["value2"] = value2;
+        data[index]["op"] = op;
+        this.setState({ data: data });
+    };
     removeFilter = index => event => {
-        let data = this.state.data
-        data.splice(index, 1)
-        this.setState({ data: data })
-    }
+        let data = this.state.data;
+        data.splice(index, 1);
+        this.setState({ data: data });
+    };
     componentDidMount() {
-        document.getElementById("edit-modal-loading").style.display = "none"
+        document.getElementById("edit-modal-loading").style.display = "none";
     }
     openImage = event => {
         window.open(
@@ -1956,18 +1952,18 @@ class EditModal extends React.Component {
                 "/api/song/" +
                 this.state.image_id +
                 "/picture?size=1000"
-        )
-    }
+        );
+    };
     render() {
-        let data = this.state.data
+        let data = this.state.data;
 
-        let dropdown_items = []
+        let dropdown_items = [];
         for (let i = 0; i < editable_columns.length; i++) {
-            let found = false
+            let found = false;
             for (let j = 0; j < data.length; j++) {
                 if (data[j]["col"] === editable_columns[i]) {
-                    found = true
-                    break
+                    found = true;
+                    break;
                 }
             }
             if (!found) {
@@ -1979,11 +1975,11 @@ class EditModal extends React.Component {
                     >
                         {column_objects[editable_columns[i]]["name"]}
                     </a>
-                )
+                );
             }
         }
 
-        let form_rows = []
+        let form_rows = [];
         for (let i = 0; i < this.state.data.length; i++) {
             form_rows.push(
                 <SearchFormRow
@@ -1994,10 +1990,10 @@ class EditModal extends React.Component {
                     updateFilter={this.updateFilter}
                     type="edit"
                 />
-            )
+            );
         }
 
-        let artwork = null
+        let artwork = null;
         if (this.state.image_id != null) {
             artwork = (
                 <div
@@ -2018,7 +2014,7 @@ class EditModal extends React.Component {
                             "/picture?size=100')",
                     }}
                 />
-            )
+            );
         }
 
         return (
@@ -2088,125 +2084,125 @@ class EditModal extends React.Component {
                     </div>
                 </form>
             </div>
-        )
+        );
     }
 }
 
 class SearchModal extends React.Component {
     constructor(props) {
-        super(props)
+        super(props);
         this.state = {
             data: [],
             alt_specific: false,
             album_artist_grouped: false,
             composer_grouped: false,
             publisher_grouped: false,
-        }
+        };
     }
     onCheck = type => event => {
         if (type === 0) {
-            this.setState({ alt_specific: !this.state.alt_specific })
+            this.setState({ alt_specific: !this.state.alt_specific });
         } else if (type === 1) {
             this.setState({
                 album_artist_grouped: !this.state.album_artist_grouped,
-            })
+            });
         } else if (type === 2) {
-            this.setState({ composer_grouped: !this.state.composer_grouped })
+            this.setState({ composer_grouped: !this.state.composer_grouped });
         } else if (type === 3) {
-            this.setState({ publisher_grouped: !this.state.publisher_grouped })
+            this.setState({ publisher_grouped: !this.state.publisher_grouped });
         }
-    }
+    };
     addFilter = type => event => {
-        let data = this.state.data
+        let data = this.state.data;
         data.push({
             col: type,
             value1: "",
             value2: "",
             op: column_objects[type]["type"] === 0 ? "LK" : "EQ",
-        })
-        this.setState({ data: data })
-    }
+        });
+        this.setState({ data: data });
+    };
     updateFilter = (col, value1, value2, op, index) => {
-        let data = this.state.data
-        data[index]["col"] = col
-        data[index]["value1"] = value1
-        data[index]["value2"] = value2
-        data[index]["op"] = op
-        this.setState({ data: data })
-    }
+        let data = this.state.data;
+        data[index]["col"] = col;
+        data[index]["value1"] = value1;
+        data[index]["value2"] = value2;
+        data[index]["op"] = op;
+        this.setState({ data: data });
+    };
     removeFilter = index => event => {
-        console.log(index)
-        let data = this.state.data
-        data.splice(index, 1)
-        this.setState({ data: data })
-    }
+        console.log(index);
+        let data = this.state.data;
+        data.splice(index, 1);
+        this.setState({ data: data });
+    };
     handleSubmit = event => {
-        event.preventDefault()
-        removeActiveNavbar()
-        document.getElementById("advanced-search-submit").disabled = true
-        let request = {}
-        request["base_url"] = "/api/search/songs"
-        request["base_params"] = {}
-        request["base_params"]["specific"] = 1
+        event.preventDefault();
+        removeActiveNavbar();
+        document.getElementById("advanced-search-submit").disabled = true;
+        let request = {};
+        request["base_url"] = "/api/search/songs";
+        request["base_params"] = {};
+        request["base_params"]["specific"] = 1;
         request["base_params"]["alt_specific"] =
-            this.state.alt_specific === true ? 1 : 0
+            this.state.alt_specific === true ? 1 : 0;
         request["base_params"]["album_artist_grouped"] =
-            this.state.album_artist_grouped === true ? 1 : 0
+            this.state.album_artist_grouped === true ? 1 : 0;
         request["base_params"]["composer_grouped"] =
-            this.state.composer_grouped === true ? 1 : 0
+            this.state.composer_grouped === true ? 1 : 0;
         request["base_params"]["publisher_grouped"] =
-            this.state.publisher_grouped === true ? 1 : 0
+            this.state.publisher_grouped === true ? 1 : 0;
 
-        let data = this.state.data
+        let data = this.state.data;
         for (let i = 0; i < data.length; i++) {
-            let col = data[i]["col"]
-            let op = data[i]["op"]
-            let value1 = data[i]["value1"]
-            let value2 = data[i]["value2"]
+            let col = data[i]["col"];
+            let op = data[i]["op"];
+            let value1 = data[i]["value1"];
+            let value2 = data[i]["value2"];
 
             if (column_objects[col]["type"] === 1) {
                 // int type
-                value1 = parseInt(value1, 10)
+                value1 = parseInt(value1, 10);
                 if (isNaN(value1)) {
-                    continue
+                    continue;
                 }
                 if (op === "BT") {
-                    value2 = parseInt(value2, 10)
+                    value2 = parseInt(value2, 10);
                     if (isNaN(value2)) {
-                        continue
+                        continue;
                     }
                 }
             } else if (column_objects[col]["type"] === 2) {
                 // date type
-                console.log(value1)
-                value1 = Date.now() - Date.parse(value1)
+                console.log(value1);
+                value1 = Date.now() - Date.parse(value1);
                 if (isNaN(value1)) {
-                    continue
+                    continue;
                 }
                 if (op === "BT") {
-                    value2 = Date.now() - Date.parse(value2)
+                    value2 = Date.now() - Date.parse(value2);
                     if (isNaN(value2)) {
-                        continue
+                        continue;
                     }
                 }
             }
 
             if (op === "BT") {
                 request["base_params"][col] =
-                    op + ":::" + value1 + ":::" + value2
+                    op + ":::" + value1 + ":::" + value2;
             } else {
-                request["base_params"][col] = op + ":::" + value1
+                request["base_params"][col] = op + ":::" + value1;
             }
         }
 
-        this.props.handleAdvancedSearch(request)
-    }
+        this.props.handleAdvancedSearch(request);
+    };
     render() {
-        let availability = 0
-        let data = this.state.data
-        let dropdown_items = []
+        let availability = 0;
+        let data = this.state.data;
+        let dropdown_items = [];
         if (this.state.alt_specific === true) {
-            availability = 1
+            availability = 1;
         }
 
         for (let i = 0; i < searchable_columns.length; i++) {
@@ -2214,11 +2210,11 @@ class SearchModal extends React.Component {
                 column_objects[searchable_columns[i]]["availability"] <=
                 availability
             ) {
-                let found = false
+                let found = false;
                 for (let j = 0; j < data.length; j++) {
                     if (data[j]["col"] === searchable_columns[i]) {
-                        found = true
-                        break
+                        found = true;
+                        break;
                     }
                 }
                 if (!found) {
@@ -2230,12 +2226,12 @@ class SearchModal extends React.Component {
                         >
                             {column_objects[searchable_columns[i]]["name"]}
                         </a>
-                    )
+                    );
                 }
             }
         }
 
-        let form_rows = []
+        let form_rows = [];
         for (let i = 0; i < this.state.data.length; i++) {
             form_rows.push(
                 <SearchFormRow
@@ -2245,7 +2241,7 @@ class SearchModal extends React.Component {
                     removeFilter={this.removeFilter}
                     updateFilter={this.updateFilter}
                 />
-            )
+            );
         }
 
         return (
@@ -2381,13 +2377,13 @@ class SearchModal extends React.Component {
                     </div>
                 </form>
             </div>
-        )
+        );
     }
 }
 
 class AudioApp extends React.Component {
     constructor(props) {
-        super(props)
+        super(props);
         this.state = {
             child_type: "welcome",
             child_key: null,
@@ -2407,34 +2403,34 @@ class AudioApp extends React.Component {
             edit_info: null,
             active_audio: "audio",
             next_id: null,
-        }
+        };
     }
 
     // creates a playlist based on given information from the songlist - there are a few cases here
     // also shuffles the list if shuffle is turned on
     generatePlaylist = (index_position, page, total_size, request, data) => {
-        request = this.state.child_request
+        request = this.state.child_request;
         // first check if we need to make an additional api call to get all the songs for the playlist
         if (total_size <= pageLength) {
-            data = JSON.parse(JSON.stringify(data)) // deepcopy to avoid accidentally modifying the songlist
+            data = JSON.parse(JSON.stringify(data)); // deepcopy to avoid accidentally modifying the songlist
             if (this.state.shuffle === true) {
-                this.setPlaylist(shuffle(data, index_position), 0)
+                this.setPlaylist(shuffle(data, index_position), 0);
             } else {
-                this.setPlaylist(data, index_position)
+                this.setPlaylist(data, index_position);
             }
         } else {
-            let position = index_position + page * pageLength // get position in the TOTAL list of songs
+            let position = index_position + page * pageLength; // get position in the TOTAL list of songs
             if (total_size <= maxPlaylistSize) {
                 // total size is less than playlist size, so get all songs and place into playlist accordingly
-                let requestNew = {}
-                requestNew["base_url"] = request["base_url"]
+                let requestNew = {};
+                requestNew["base_url"] = request["base_url"];
                 requestNew["base_params"] = JSON.parse(
                     JSON.stringify(request["base_params"])
-                ) // deep copy
+                ); // deep copy
                 if (this.state.shuffle === true) {
-                    requestNew["base_params"]["shuffle"] = 1
+                    requestNew["base_params"]["shuffle"] = 1;
                     requestNew["base_params"]["exclude"] =
-                        data[index_position].id
+                        data[index_position].id;
                 }
                 axios
                     .get(requestNew["base_url"], {
@@ -2442,14 +2438,14 @@ class AudioApp extends React.Component {
                     })
                     .then(response => {
                         if (this.state.shuffle === true) {
-                            response.data.data.unshift(data[index_position])
-                            position = 0
+                            response.data.data.unshift(data[index_position]);
+                            position = 0;
                         }
-                        this.setPlaylist(response.data.data, position)
+                        this.setPlaylist(response.data.data, position);
                     })
                     .catch(function(error) {
-                        console.log(error)
-                    })
+                        console.log(error);
+                    });
             } else {
                 // if current position to end is less than the max playlist size, then we need to
                 // get from current position to end, then combine with remaining results from beginning
@@ -2458,24 +2454,24 @@ class AudioApp extends React.Component {
                     position + maxPlaylistSize > total_size &&
                     this.state.shuffle === false
                 ) {
-                    let requestEnd = {}
-                    requestEnd["base_url"] = request["base_url"]
+                    let requestEnd = {};
+                    requestEnd["base_url"] = request["base_url"];
                     requestEnd["base_params"] = JSON.parse(
                         JSON.stringify(request["base_params"])
-                    ) // deep copy
-                    requestEnd["base_params"]["first_result"] = position
+                    ); // deep copy
+                    requestEnd["base_params"]["first_result"] = position;
                     requestEnd["base_params"]["max_results"] =
-                        total_size - position
-                    let requestFront = {}
-                    requestFront["base_url"] = request["base_url"]
+                        total_size - position;
+                    let requestFront = {};
+                    requestFront["base_url"] = request["base_url"];
                     requestFront["base_params"] = JSON.parse(
                         JSON.stringify(request["base_params"])
-                    ) // deep copy
-                    requestFront["base_params"]["first_result"] = 0
+                    ); // deep copy
+                    requestFront["base_params"]["first_result"] = 0;
                     requestFront["base_params"]["max_results"] =
-                        position + maxPlaylistSize - total_size
-                    console.log(requestFront)
-                    console.log(requestEnd)
+                        position + maxPlaylistSize - total_size;
+                    console.log(requestFront);
+                    console.log(requestEnd);
                     axios
                         .all([
                             axios.get(requestEnd["base_url"], {
@@ -2489,29 +2485,29 @@ class AudioApp extends React.Component {
                             axios.spread((responseEnd, responseFront) => {
                                 let playlist = responseEnd.data.data.concat(
                                     responseFront.data.data
-                                )
-                                this.setPlaylist(playlist, 0)
+                                );
+                                this.setPlaylist(playlist, 0);
                             })
                         )
                         .catch(function(error) {
-                            console.log(error)
-                        })
+                            console.log(error);
+                        });
                 } else {
                     // get from current position with maxPlaylistSize results
-                    let requestNew = {}
-                    requestNew["base_url"] = request["base_url"]
+                    let requestNew = {};
+                    requestNew["base_url"] = request["base_url"];
                     requestNew["base_params"] = JSON.parse(
                         JSON.stringify(request["base_params"])
-                    ) // deep copy
-                    requestNew["base_params"]["first_result"] = position
-                    requestNew["base_params"]["max_results"] = maxPlaylistSize
+                    ); // deep copy
+                    requestNew["base_params"]["first_result"] = position;
+                    requestNew["base_params"]["max_results"] = maxPlaylistSize;
                     if (this.state.shuffle === true) {
-                        requestNew["base_params"]["shuffle"] = 1
+                        requestNew["base_params"]["shuffle"] = 1;
                         requestNew["base_params"]["exclude"] =
-                            data[index_position].id
-                        requestNew["base_params"]["first_result"] = 0
+                            data[index_position].id;
+                        requestNew["base_params"]["first_result"] = 0;
                         requestNew["base_params"]["max_results"] =
-                            maxPlaylistSize - 1
+                            maxPlaylistSize - 1;
                     }
                     axios
                         .get(requestNew["base_url"], {
@@ -2523,23 +2519,23 @@ class AudioApp extends React.Component {
                                     JSON.parse(
                                         JSON.stringify(data[index_position])
                                     )
-                                )
+                                );
                             }
-                            this.setPlaylist(response.data.data, 0)
+                            this.setPlaylist(response.data.data, 0);
                         })
                         .catch(function(error) {
-                            console.log(error)
-                        })
+                            console.log(error);
+                        });
                 }
             }
         }
-    }
+    };
     setPlaylist = (playlist, position) => {
-        this.updatePlaycount()
+        this.updatePlaycount();
         // assigns each element a unique playlist id - we don't use db id because there can be duplicate songs in the same playlist
         // but this still prevents unnecessary rerenders for react
         for (let i = 0; i < playlist.length; i++) {
-            playlist[i].playlist_id = playlistCount++
+            playlist[i].playlist_id = playlistCount++;
         }
 
         this.setState(
@@ -2549,58 +2545,49 @@ class AudioApp extends React.Component {
                 next_id: getNextIndex(playlist, position),
             },
             () => {
-                let audio = document.getElementById(this.state.active_audio)
+                let audio = document.getElementById(this.state.active_audio);
                 audio.src =
                     "http://stella.test/api/song/" +
                     this.state.current_playlist[this.state.current_index].id +
-                    "/audio?bitrate=320&remove_metadata=1"
-                audio.load()
-                audio.play()
-                this.setState({ playStatus: "play", playcountUpdated: false })
+                    "/audio?bitrate=320&remove_metadata=1";
+                audio.load();
+                audio.play();
+                this.setState({ playStatus: "play", playcountUpdated: false });
             }
-        )
-    }
+        );
+    };
 
     addNext = event => {
-        this.addToPlaylist(
-            getSelectedRows(this.state.current_playlist),
-            1
-        )
-    }
+        this.addToPlaylist(getSelectedRows(this.state.current_playlist), 1);
+    };
     addQueue = event => {
-        this.addToPlaylist(
-            getSelectedRows(this.state.current_playlist),
-            0
-        )
-    }
+        this.addToPlaylist(getSelectedRows(this.state.current_playlist), 0);
+    };
     getPlaylistEditData = event => {
-        this.editInfo(
-            "song",
-            getSelectedRows(this.state.current_playlist)
-        )
-    }
+        this.editInfo("song", getSelectedRows(this.state.current_playlist));
+    };
     addToPlaylist = (data, next) => {
         // TODO: maybe try to make more efficient? it is pretty fast already though
-        data = JSON.parse(JSON.stringify(data))
-        let new_playlist = this.state.current_playlist
-        let prev_size = new_playlist.length
-        let current_index = this.state.current_index
+        data = JSON.parse(JSON.stringify(data));
+        let new_playlist = this.state.current_playlist;
+        let prev_size = new_playlist.length;
+        let current_index = this.state.current_index;
 
         if (prev_size !== 0 && next === 0 && this.state.shuffle === false) {
-            data.reverse()
+            data.reverse();
         }
 
         for (let i = data.length - 1; i >= 0; i--) {
             // loops through all the songs to add
             // if playlist size is too large, try removing from the beginning (if there are at least 10 elements before current)
             // else, pop off end
-            data[i].playlist_id = playlistCount++
+            data[i].playlist_id = playlistCount++;
             if (new_playlist.length + 1 > maxPlaylistSize) {
                 if (current_index > 10) {
-                    new_playlist.shift()
-                    current_index = current_index - 1
+                    new_playlist.shift();
+                    current_index = current_index - 1;
                 } else {
-                    new_playlist.pop()
+                    new_playlist.pop();
                 }
             }
 
@@ -2611,13 +2598,13 @@ class AudioApp extends React.Component {
                 current_index + 1 < new_playlist.length &&
                 prev_size > 0
             ) {
-                new_playlist.splice(current_index + 1, 0, data[i])
+                new_playlist.splice(current_index + 1, 0, data[i]);
             } else if (prev_size === 0) {
                 // else if the playlist is currently empty, just add them all at the front
-                new_playlist.unshift(data[i])
+                new_playlist.unshift(data[i]);
             } else {
                 // else, add at end
-                new_playlist.push(data[i])
+                new_playlist.push(data[i]);
             }
 
             // if adding to queue, shuffle the new entry if necessary (between current_index+1 and end)
@@ -2626,41 +2613,42 @@ class AudioApp extends React.Component {
                     Math.random() *
                         (new_playlist.length - (current_index + 2)) +
                         (current_index + 1)
-                )
-                let x = new_playlist[new_playlist.length - 1]
-                new_playlist[new_playlist.length - 1] = new_playlist[swap_index]
-                new_playlist[swap_index] = x
+                );
+                let x = new_playlist[new_playlist.length - 1];
+                new_playlist[new_playlist.length - 1] =
+                    new_playlist[swap_index];
+                new_playlist[swap_index] = x;
             }
         }
         this.setState({
             current_playlist: new_playlist,
             current_index: current_index,
             next_id: getNextIndex(new_playlist, current_index),
-        })
-    }
+        });
+    };
     addAllToPlaylist = method => {
-        let request = JSON.parse(JSON.stringify(this.state.child_request))
-        request["base_params"]["first_result"] = 0
-        request["base_params"]["max_results"] = maxPlaylistSize
-        request["base_params"]["order_by"] = this.state.child_sort_column
-        request["base_params"]["order_by_order"] = this.state.child_sort_type
-        request["base_params"]["results"] = 0
+        let request = JSON.parse(JSON.stringify(this.state.child_request));
+        request["base_params"]["first_result"] = 0;
+        request["base_params"]["max_results"] = maxPlaylistSize;
+        request["base_params"]["order_by"] = this.state.child_sort_column;
+        request["base_params"]["order_by_order"] = this.state.child_sort_type;
+        request["base_params"]["results"] = 0;
         axios
             .get(request["base_url"], {
                 params: request["base_params"],
             })
             .then(response => {
-                this.addToPlaylist(response.data.data, method)
+                this.addToPlaylist(response.data.data, method);
             })
             .catch(function(error) {
-                console.log(error)
-            })
-    }
+                console.log(error);
+            });
+    };
     updatePlaying = () => {
         // removes any elements with the now_playing class
-        let previously_playing = document.getElementsByClassName("now_playing")
+        let previously_playing = document.getElementsByClassName("now_playing");
         while (previously_playing.length > 0) {
-            previously_playing[0].classList.remove("now_playing")
+            previously_playing[0].classList.remove("now_playing");
         }
 
         // adds the now_playing class to any instance of the song on the screen
@@ -2668,25 +2656,25 @@ class AudioApp extends React.Component {
             let now_playing = document.getElementById(
                 "song-item-" +
                     this.state.current_playlist[this.state.current_index].id
-            )
+            );
             if (now_playing != null) {
-                now_playing.classList.add("now_playing")
+                now_playing.classList.add("now_playing");
             }
             now_playing = document.getElementById(
                 "playlist-song-item-" +
                     this.state.current_playlist[this.state.current_index]
                         .playlist_id
-            )
+            );
             if (now_playing != null) {
-                now_playing.classList.add("now_playing")
+                now_playing.classList.add("now_playing");
             }
         }
-    }
+    };
 
     songList = event => {
-        let request = {}
-        request["base_url"] = "/api/search/songs"
-        request["base_params"] = {}
+        let request = {};
+        request["base_url"] = "/api/search/songs";
+        request["base_params"] = {};
         this.props.history.push("/songs", {
             child_type: "song-list",
             child_key: "song-list",
@@ -2695,45 +2683,45 @@ class AudioApp extends React.Component {
             child_sort_type: "ASC",
             child_sort_column: "title",
             child_total_size: -1,
-        })
-        removeActiveNavbar()
-        document.getElementById("navbar-songs").classList.add("active")
-    }
+        });
+        removeActiveNavbar();
+        document.getElementById("navbar-songs").classList.add("active");
+    };
     // makes a call for the search results (including the total number of results) to pass to the song list
     onSearchClick = (search, type) => {
-        let child_type = "song-list"
-        let sort = "title"
-        let request = {}
-        request["base_url"] = "/api/search/songs"
-        request["base_params"] = {}
+        let child_type = "song-list";
+        let sort = "title";
+        let request = {};
+        request["base_url"] = "/api/search/songs";
+        request["base_params"] = {};
 
         if (type === 0) {
-            child_type = "song-list"
-            request["base_params"]["results"] = "song"
-            request["base_params"]["search"] = search
-            sort = "title"
+            child_type = "song-list";
+            request["base_params"]["results"] = "song";
+            request["base_params"]["search"] = search;
+            sort = "title";
         } else if (type === 1) {
-            child_type = "album-list"
-            request["base_params"]["results"] = "album"
-            request["base_params"]["specific"] = 1
-            request["base_params"]["album"] = "LK:::" + search
-            sort = "album"
+            child_type = "album-list";
+            request["base_params"]["results"] = "album";
+            request["base_params"]["specific"] = 1;
+            request["base_params"]["album"] = "LK:::" + search;
+            sort = "album";
         } else if (type === 2) {
-            child_type = "artist-list"
-            request["base_params"]["results"] = "artist"
-            request["base_params"]["specific"] = 1
-            request["base_params"]["album_artist"] = "LK:::" + search
-            sort = "album_artist"
+            child_type = "artist-list";
+            request["base_params"]["results"] = "artist";
+            request["base_params"]["specific"] = 1;
+            request["base_params"]["album_artist"] = "LK:::" + search;
+            sort = "album_artist";
         } else {
-            child_type = "artist-list"
-            request["base_params"]["results"] = "all_artists"
-            request["base_params"]["strict_artist"] = search
-            request["base_params"]["artist"] = "LK:::" + search
-            request["base_params"]["album_artist_grouped"] = 1
-            request["base_params"]["composer_grouped"] = 1
-            request["base_params"]["publisher_grouped"] = 1
-            request["base_params"]["specific"] = 1
-            sort = "artist"
+            child_type = "artist-list";
+            request["base_params"]["results"] = "all_artists";
+            request["base_params"]["strict_artist"] = search;
+            request["base_params"]["artist"] = "LK:::" + search;
+            request["base_params"]["album_artist_grouped"] = 1;
+            request["base_params"]["composer_grouped"] = 1;
+            request["base_params"]["publisher_grouped"] = 1;
+            request["base_params"]["specific"] = 1;
+            sort = "artist";
         }
 
         this.props.history.push("/genericsearch/" + search, {
@@ -2744,9 +2732,9 @@ class AudioApp extends React.Component {
             child_sort_type: "ASC",
             child_sort_column: sort,
             child_total_size: -1,
-        })
-        removeActiveNavbar()
-    }
+        });
+        removeActiveNavbar();
+    };
     onPageUpdate = (new_page, force) => e => {
         // makes a request to get the results of the selected page of the child element
         // only update if the page clicked is a new page (not the current)
@@ -2760,17 +2748,17 @@ class AudioApp extends React.Component {
                 child_sort_column: this.state.child_sort_column,
                 child_total_size: this.state.child_total_size,
                 close_search_modal: force === true ? true : false,
-            })
+            });
         }
-    }
+    };
     onSort = sort_column => e => {
-        let sort_type = this.state.child_sort_type
+        let sort_type = this.state.child_sort_type;
 
         if (sort_column === this.state.child_sort_column) {
             if (sort_type === "ASC") {
-                sort_type = "DESC"
+                sort_type = "DESC";
             } else {
-                sort_type = "ASC"
+                sort_type = "ASC";
             }
         }
 
@@ -2782,56 +2770,56 @@ class AudioApp extends React.Component {
             child_sort_type: sort_type,
             child_sort_column: sort_column,
             child_total_size: this.state.child_total_size,
-        })
-    }
+        });
+    };
     forceUpdate = () => {
-        this.onPageUpdate(this.state.child_page, true)(null)
-    }
+        this.onPageUpdate(this.state.child_page, true)(null);
+    };
 
     togglePlay() {
-        let status = this.state.playStatus
-        let audio = document.getElementById(this.state.active_audio)
+        let status = this.state.playStatus;
+        let audio = document.getElementById(this.state.active_audio);
         if (status === "play") {
-            status = "pause"
-            audio.pause()
+            status = "pause";
+            audio.pause();
         } else if (this.state.current_playlist.length > 0) {
-            status = "play"
+            status = "play";
             if (audio.src == null || audio.src.length < 1) {
                 audio.src =
                     "http://stella.test/api/song/" +
                     this.state.current_playlist[this.state.current_index].id +
-                    "/audio?bitrate=320&remove_metadata=1"
-                audio.load()
+                    "/audio?bitrate=320&remove_metadata=1";
+                audio.load();
             }
-            audio.play()
+            audio.play();
         }
-        this.setState({ playStatus: status })
+        this.setState({ playStatus: status });
     }
     toggleShuffle() {
         if (this.state.shuffle === false) {
-            this.setState({ shuffle: true })
+            this.setState({ shuffle: true });
             let new_playlist = shuffle(
                 this.state.current_playlist,
                 this.state.current_index
-            )
-            this.setState({ current_playlist: new_playlist, current_index: 0 })
+            );
+            this.setState({ current_playlist: new_playlist, current_index: 0 });
         } else {
-            this.setState({ shuffle: false })
+            this.setState({ shuffle: false });
         }
     }
     getPrevious() {
-        let current_index = this.state.current_index - 1
-        let status = this.state.playStatus
-        let audio = document.getElementById(this.state.active_audio)
+        let current_index = this.state.current_index - 1;
+        let status = this.state.playStatus;
+        let audio = document.getElementById(this.state.active_audio);
         if (audio.currentTime < 5 && this.state.current_index > 0) {
             if (status === "play") {
-                audio.pause()
+                audio.pause();
                 audio.src =
                     "http://stella.test/api/song/" +
                     this.state.current_playlist[current_index].id +
-                    "/audio?bitrate=320&remove_metadata=1"
-                audio.load()
-                audio.play()
+                    "/audio?bitrate=320&remove_metadata=1";
+                audio.load();
+                audio.play();
             }
             this.setState({
                 current_index: current_index,
@@ -2839,42 +2827,42 @@ class AudioApp extends React.Component {
                     this.state.current_playlist,
                     current_index
                 ),
-            })
+            });
         } else {
-            audio.currentTime = 0
+            audio.currentTime = 0;
         }
     }
     getNext() {
         // TODO: currently involves two updates to setstate - try reducing later
-        this.updatePlaycount()
-        let current_index = this.state.current_index + 1
+        this.updatePlaycount();
+        let current_index = this.state.current_index + 1;
         if (current_index >= this.state.current_playlist.length) {
             // wrap around at end
-            current_index = 0
+            current_index = 0;
         }
-        let status = this.state.playStatus
+        let status = this.state.playStatus;
         let next_audio_label =
-            this.state.active_audio === "audio" ? "audio2" : "audio"
+            this.state.active_audio === "audio" ? "audio2" : "audio";
 
-        let audio = document.getElementById(this.state.active_audio)
-        let next_audio = document.getElementById(next_audio_label)
+        let audio = document.getElementById(this.state.active_audio);
+        let next_audio = document.getElementById(next_audio_label);
         if (status === "play") {
-            audio.pause()
+            audio.pause();
             next_audio.src =
                 "http://stella.test/api/song/" +
                 this.state.current_playlist[current_index].id +
-                "/audio?bitrate=320&remove_metadata=1"
-            next_audio.load()
-            next_audio.play()
+                "/audio?bitrate=320&remove_metadata=1";
+            next_audio.load();
+            next_audio.play();
         }
         this.setState({
             current_index: current_index,
             active_audio: next_audio_label,
             next_id: getNextIndex(this.state.current_playlist, current_index),
-        })
+        });
     }
     updatePlaycount = () => {
-        let audio = document.getElementById(this.state.active_audio)
+        let audio = document.getElementById(this.state.active_audio);
         // at ten seconds, increment playcount
         if (audio.currentTime > 10) {
             axios
@@ -2886,55 +2874,55 @@ class AudioApp extends React.Component {
                     {}
                 )
                 .catch(function(error) {
-                    console.log(error)
-                })
-            let playlist = this.state.current_playlist
-            let new_count = playlist[this.state.current_index].play_count + 1
-            playlist[this.state.current_index].play_count = new_count
+                    console.log(error);
+                });
+            let playlist = this.state.current_playlist;
+            let new_count = playlist[this.state.current_index].play_count + 1;
+            playlist[this.state.current_index].play_count = new_count;
 
             let elements = document.getElementsByClassName(
                 "song-id-" +
                     this.state.current_playlist[this.state.current_index].id
-            )
+            );
             if (elements.length > 0) {
-                let temp = this.state.child_data
+                let temp = this.state.child_data;
                 for (let i = 0; i < elements.length; i++) {
-                    temp.data[elements[i].rowIndex - 1].play_count = new_count
+                    temp.data[elements[i].rowIndex - 1].play_count = new_count;
                 }
-                this.setState({ current_playlist: playlist, child_data: temp })
+                this.setState({ current_playlist: playlist, child_data: temp });
             } else {
-                this.setState({ current_playlist: playlist })
+                this.setState({ current_playlist: playlist });
             }
         }
-    }
+    };
 
     // seek-bar updating
     timeUpdate = event => {
-        let audio = document.getElementById(this.state.active_audio)
-        let progress = document.getElementById("audio-seeker-progress")
+        let audio = document.getElementById(this.state.active_audio);
+        let progress = document.getElementById("audio-seeker-progress");
         let playPercent =
             100 *
             (audio.currentTime /
                 (this.state.current_playlist[this.state.current_index].length *
-                    100))
-        progress.style.width = "calc((100% - 69px) *" + playPercent + ")"
-    }
+                    100));
+        progress.style.width = "calc((100% - 69px) *" + playPercent + ")";
+    };
     // jump to song position when user clicks on the seekbar
     seek = event => {
-        let audio = document.getElementById(this.state.active_audio)
-        let totalWidth = window.innerWidth - 120.0
-        let clickX = event.clientX - 100.0
-        let percent = clickX / totalWidth
+        let audio = document.getElementById(this.state.active_audio);
+        let totalWidth = window.innerWidth - 120.0;
+        let clickX = event.clientX - 100.0;
+        let percent = clickX / totalWidth;
         audio.currentTime =
             this.state.current_playlist[this.state.current_index].length *
-            percent
-    }
+            percent;
+    };
 
     // playlist pane - toggle display
     togglePlaylistPane = event => {
-        let playlist_popup = document.getElementById("playlist-popup")
+        let playlist_popup = document.getElementById("playlist-popup");
         if (playlist_popup.classList.contains("collapsed")) {
-            playlist_popup.classList.remove("collapsed")
+            playlist_popup.classList.remove("collapsed");
 
             // scroll to the currently playing song upon popup open
             if (this.state.current_playlist.length > 0) {
@@ -2942,21 +2930,23 @@ class AudioApp extends React.Component {
                     "playlist-song-item-" +
                         this.state.current_playlist[this.state.current_index]
                             .playlist_id
-                )
+                );
                 if (active != null) {
-                    let playlist_pane = document.getElementById("playlist-pane")
-                    playlist_pane.scrollTop = active.offsetTop
+                    let playlist_pane = document.getElementById(
+                        "playlist-pane"
+                    );
+                    playlist_pane.scrollTop = active.offsetTop;
                 }
             }
         } else {
-            playlist_popup.classList.add("collapsed")
+            playlist_popup.classList.add("collapsed");
         }
-    }
+    };
     // if user pressed play on a song in the playlist, jump to that song
     changeCurrentIndex = position => {
-        this.updatePlaycount()
+        this.updatePlaycount();
         if (position === this.state.current_index) {
-            return
+            return;
         }
         this.setState(
             {
@@ -2964,62 +2954,62 @@ class AudioApp extends React.Component {
                 next_id: getNextIndex(this.state.current_playlist, position),
             },
             () => {
-                let audio = document.getElementById(this.state.active_audio)
+                let audio = document.getElementById(this.state.active_audio);
                 audio.src =
                     "http://stella.test/api/song/" +
                     this.state.current_playlist[this.state.current_index].id +
-                    "/audio?bitrate=320&remove_metadata=1"
-                audio.load()
-                audio.play()
-                this.setState({ playStatus: "play" })
+                    "/audio?bitrate=320&remove_metadata=1";
+                audio.load();
+                audio.play();
+                this.setState({ playStatus: "play" });
             }
-        )
-    }
+        );
+    };
     // drag-and-drop of songs in the playlist - moves the dragged song and shifts remaining elements accordingly
     onPlaylistSongDrop = (new_position, old_positions) => {
-        let new_playlist = this.state.current_playlist
-        let current_index = this.state.current_index
+        let new_playlist = this.state.current_playlist;
+        let current_index = this.state.current_index;
         for (let i = 0; i < old_positions.length; i++) {
-            let old_position = old_positions[i]
+            let old_position = old_positions[i];
             if (new_position > old_position) {
-                new_position--
+                new_position--;
             }
             if (old_position >= new_position) {
-                old_position = old_position + i
+                old_position = old_position + i;
             }
             if (current_index === old_position) {
-                current_index = new_position
+                current_index = new_position;
             } else if (
                 new_position <= current_index &&
                 old_position > current_index
             ) {
-                current_index++
+                current_index++;
             } else if (
                 new_position >= current_index &&
                 old_position < current_index
             ) {
-                current_index--
+                current_index--;
             }
             new_playlist.splice(
                 new_position,
                 0,
                 new_playlist.splice(old_position, 1)[0]
-            )
+            );
         }
         this.setState({
             current_playlist: new_playlist,
             current_index: current_index,
             next_id: getNextIndex(new_playlist, current_index),
-        })
-    }
+        });
+    };
     onContextMenu = event => {
-        event.preventDefault()
-        renderContextMenu(event, "playlist", "playlist-row")
-    }
+        event.preventDefault();
+        renderContextMenu(event, "playlist", "playlist-row");
+    };
     updateRatings = (new_rating, ids) => {
         // encode new rating and list of ids to update as form data, then update in db
-        let ratingUpdate = new FormData()
-        ratingUpdate.append("rating", new_rating)
+        let ratingUpdate = new FormData();
+        ratingUpdate.append("rating", new_rating);
         axios
             .post("/api/songs", ratingUpdate, {
                 params: {
@@ -3027,50 +3017,50 @@ class AudioApp extends React.Component {
                 },
             })
             .catch(function(error) {
-                console.log(error)
-            })
+                console.log(error);
+            });
 
         // in the meantime, set the modified ids on frontend to the respective ratings
-        let temp = this.state.child_data
-        let playlist = this.state.current_playlist
+        let temp = this.state.child_data;
+        let playlist = this.state.current_playlist;
         for (let i = 0; i < ids.length; i++) {
             let listElements = document.getElementsByClassName(
                 "song-id-" + ids[i]
-            )
+            );
             if (listElements.length > 0) {
                 for (let i = 0; i < listElements.length; i++) {
-                    temp.data[listElements[i].rowIndex - 1].rating = new_rating
+                    temp.data[listElements[i].rowIndex - 1].rating = new_rating;
                 }
             }
             let playlistElements = document.getElementsByClassName(
                 "playlist-song-id-" + ids[i]
-            )
+            );
             if (playlistElements.length > 0) {
                 for (let i = 0; i < playlistElements.length; i++) {
                     playlist[
                         playlistElements[i].rowIndex - 1
-                    ].rating = new_rating
+                    ].rating = new_rating;
                 }
             }
         }
-        this.setState({ child_data: temp, current_playlist: playlist })
-    }
+        this.setState({ child_data: temp, current_playlist: playlist });
+    };
     onScroll = event => {
-        let scrollY = event.currentTarget.scrollTop
+        let scrollY = event.currentTarget.scrollTop;
         if (!playlistTicking) {
-            playlistTicking = true
+            playlistTicking = true;
             this.setState({ playlistScroll: scrollY }, function() {
-                playlistTicking = false
-            })
+                playlistTicking = false;
+            });
         }
-    }
+    };
     welcomeScreen = () => {
-        this.props.history.push("/")
-    }
+        this.props.history.push("/");
+    };
     albumList = () => {
-        let request = {}
-        request["base_url"] = "/api/search/songs"
-        request["base_params"] = { results: "album" }
+        let request = {};
+        request["base_url"] = "/api/search/songs";
+        request["base_params"] = { results: "album" };
         this.props.history.push("/albums", {
             child_type: "album-list",
             child_key: "album-list",
@@ -3079,19 +3069,19 @@ class AudioApp extends React.Component {
             child_sort_type: "ASC",
             child_sort_column: "album",
             child_total_size: -1,
-        })
-        removeActiveNavbar()
-        document.getElementById("navbar-albums").classList.add("active")
-    }
+        });
+        removeActiveNavbar();
+        document.getElementById("navbar-albums").classList.add("active");
+    };
     albumClick = (album, album_artist) => {
-        let request = {}
-        request["base_url"] = "/api/search/songs"
+        let request = {};
+        request["base_url"] = "/api/search/songs";
         request["base_params"] = {
             specific: 1,
             album: "EQ:::" + album,
             album_artist: "EQ:::" + album_artist,
             album_detail: 1,
-        }
+        };
         this.props.history.push("/album/" + album_artist + "/" + album, {
             child_type: "song-list-album",
             child_key: album + " " + album_artist,
@@ -3100,24 +3090,24 @@ class AudioApp extends React.Component {
             child_sort_type: "ASC",
             child_sort_column: "album",
             child_total_size: -1,
-        })
-        removeActiveNavbar()
-        let selected_navbar = document.getElementById("selected-navbar")
-        selected_navbar.style.pointerEvents = "none"
-        selected_navbar.style.opacity = 0
-    }
+        });
+        removeActiveNavbar();
+        let selected_navbar = document.getElementById("selected-navbar");
+        selected_navbar.style.pointerEvents = "none";
+        selected_navbar.style.opacity = 0;
+    };
     albumClickPassthrough = event => {
         if (this.state.current_playlist.length > 0) {
             this.albumClick(
                 this.state.current_playlist[this.state.current_index].album,
                 this.state.current_playlist[this.state.current_index]
                     .album_artist
-            )
+            );
         }
-    }
+    };
     artistClick = artist => {
-        let request = {}
-        request["base_url"] = "/api/search/songs"
+        let request = {};
+        request["base_url"] = "/api/search/songs";
         request["base_params"] = {
             specific: 1,
             results: "album",
@@ -3125,7 +3115,7 @@ class AudioApp extends React.Component {
             album_artist_grouped: 1,
             composer_grouped: 1,
             publisher_grouped: 1,
-        }
+        };
         this.props.history.push("/artists/" + artist, {
             child_type: "album-list-artist",
             child_key: artist,
@@ -3135,22 +3125,22 @@ class AudioApp extends React.Component {
             child_sort_column: "year",
             child_total_size: -1,
             artist_detail: 1,
-        })
-        removeActiveNavbar()
-        let selected_navbar = document.getElementById("selected-navbar")
-        selected_navbar.style.pointerEvents = "none"
-        selected_navbar.style.opacity = 0
-    }
+        });
+        removeActiveNavbar();
+        let selected_navbar = document.getElementById("selected-navbar");
+        selected_navbar.style.pointerEvents = "none";
+        selected_navbar.style.opacity = 0;
+    };
     artistClickPassthrough = event => {
         if (this.state.current_playlist.length > 0) {
             this.artistClick(
                 this.state.current_playlist[this.state.current_index].artist
-            )
+            );
         }
-    }
+    };
     artistSongs = artist => {
-        let request = {}
-        request["base_url"] = "/api/search/songs"
+        let request = {};
+        request["base_url"] = "/api/search/songs";
         request["base_params"] = {
             specific: 1,
             results: "songs",
@@ -3158,7 +3148,7 @@ class AudioApp extends React.Component {
             album_artist_grouped: 1,
             composer_grouped: 1,
             publisher_grouped: 1,
-        }
+        };
         this.props.history.push("/artists/" + artist, {
             child_type: "song-list-artist",
             child_key: artist,
@@ -3168,13 +3158,13 @@ class AudioApp extends React.Component {
             child_sort_column: "year",
             child_total_size: -1,
             artist_detail: 1,
-        })
-        removeActiveNavbar()
-    }
+        });
+        removeActiveNavbar();
+    };
     artistList = () => {
-        let request = {}
-        request["base_url"] = "/api/search/songs"
-        request["base_params"] = { results: "artist" }
+        let request = {};
+        request["base_url"] = "/api/search/songs";
+        request["base_params"] = { results: "artist" };
         this.props.history.push("/artists", {
             child_type: "artist-list",
             child_key: "artist-list",
@@ -3183,10 +3173,10 @@ class AudioApp extends React.Component {
             child_sort_type: "ASC",
             child_sort_column: "album_artist",
             child_total_size: -1,
-        })
-        removeActiveNavbar()
-        document.getElementById("navbar-artists").classList.add("active")
-    }
+        });
+        removeActiveNavbar();
+        document.getElementById("navbar-artists").classList.add("active");
+    };
     updateNavigation = location => {
         if (location.pathname === "/" || location.state == null) {
             this.setState({
@@ -3198,19 +3188,19 @@ class AudioApp extends React.Component {
                 child_page: 0,
                 child_sort_column: null,
                 child_sort_type: "ASC",
-            })
-            removeActiveNavbar()
-            document.getElementById("navbar-home").classList.add("active")
+            });
+            removeActiveNavbar();
+            document.getElementById("navbar-home").classList.add("active");
         } else {
-            let state = JSON.parse(JSON.stringify(location.state))
-            let request = JSON.parse(JSON.stringify(state.child_request))
+            let state = JSON.parse(JSON.stringify(location.state));
+            let request = JSON.parse(JSON.stringify(state.child_request));
             request["base_params"]["first_result"] =
-                pageLength * state.child_page
-            request["base_params"]["max_results"] = pageLength
-            request["base_params"]["order_by"] = state.child_sort_column
-            request["base_params"]["order_by_order"] = state.child_sort_type
+                pageLength * state.child_page;
+            request["base_params"]["max_results"] = pageLength;
+            request["base_params"]["order_by"] = state.child_sort_column;
+            request["base_params"]["order_by_order"] = state.child_sort_type;
             if (state.child_total_size === -1) {
-                request["base_params"]["get_total"] = 1
+                request["base_params"]["get_total"] = 1;
             }
 
             if (
@@ -3246,19 +3236,19 @@ class AudioApp extends React.Component {
                                 },
                                 () => {
                                     if (state.close_search_modal === true) {
-                                        this.closeModals(null)
+                                        this.closeModals(null);
                                     }
                                 }
-                            )
+                            );
                         })
                     )
                     .catch(error => {
                         if (state.close_search_modal === true) {
-                            this.closeModals(null)
+                            this.closeModals(null);
                         }
-                        this.props.history.push("/", {})
-                        console.log(error)
-                    })
+                        this.props.history.push("/", {});
+                        console.log(error);
+                    });
             } else {
                 axios
                     .get(request["base_url"], {
@@ -3282,31 +3272,31 @@ class AudioApp extends React.Component {
                             },
                             () => {
                                 if (state.close_search_modal === true) {
-                                    this.closeModals(null)
+                                    this.closeModals(null);
                                 }
                             }
-                        )
+                        );
                     })
                     .catch(error => {
                         if (state.close_search_modal === true) {
-                            this.closeModals(null)
+                            this.closeModals(null);
                         }
-                        this.props.history.push("/", {})
-                        console.log(error)
-                    })
+                        this.props.history.push("/", {});
+                        console.log(error);
+                    });
             }
         }
-    }
+    };
     openSearchModal = event => {
-        document.getElementById("modal-cover").classList.add("modal-active")
+        document.getElementById("modal-cover").classList.add("modal-active");
         document.getElementById(
             "advanced-search-modal-content"
-        ).style.visibility = "visible"
+        ).style.visibility = "visible";
         document
             .getElementById("advanced-search-modal-content")
-            .classList.add("modal-active")
-        document.getElementById("advanced-search-submit").disabled = false
-    }
+            .classList.add("modal-active");
+        document.getElementById("advanced-search-submit").disabled = false;
+    };
     closeModals = event => {
         if (
             document
@@ -3316,23 +3306,23 @@ class AudioApp extends React.Component {
             // search modal close
             document.getElementById(
                 "advanced-search-modal-content"
-            ).style.visibility = "hidden"
+            ).style.visibility = "hidden";
             document
                 .getElementById("advanced-search-modal-content")
-                .classList.remove("modal-active")
+                .classList.remove("modal-active");
         } else {
             // edit modal close
             document.getElementById("edit-modal-content").style.visibility =
-                "hidden"
+                "hidden";
             document
                 .getElementById("edit-modal-content")
-                .classList.remove("modal-active")
+                .classList.remove("modal-active");
             setTimeout(() => {
-                this.setState({ edit_type: null, edit_info: null })
-            }, 1000)
+                this.setState({ edit_type: null, edit_info: null });
+            }, 1000);
         }
-        document.getElementById("modal-cover").classList.remove("modal-active") // remove opacity cover
-    }
+        document.getElementById("modal-cover").classList.remove("modal-active"); // remove opacity cover
+    };
     handleAdvancedSearch = request => {
         this.props.history.push("/advancedsearch", {
             child_type: "song-list",
@@ -3343,30 +3333,30 @@ class AudioApp extends React.Component {
             child_sort_column: "title",
             child_total_size: -1,
             close_search_modal: true,
-        })
-    }
+        });
+    };
 
     // song editing goes here
     editInfo = (type, info) => {
-        this.openEditModal()
-        let params = {}
+        this.openEditModal();
+        let params = {};
 
         if (type === "song") {
             for (let i = 0; i < info.length; i++) {
-                info[i] = info[i].id
+                info[i] = info[i].id;
             }
-            params["id"] = JSON.stringify(info)
+            params["id"] = JSON.stringify(info);
         } else if (type === "songs") {
-            let request = JSON.parse(JSON.stringify(this.state.child_request))
-            params = request["base_params"]
+            let request = JSON.parse(JSON.stringify(this.state.child_request));
+            params = request["base_params"];
         } else if (type === "card") {
-            params = info
+            params = info;
         }
 
-        params["first_result"] = 0
-        params["max_results"] = 100
-        params["results"] = 0
-        params["song_detail"] = 1
+        params["first_result"] = 0;
+        params["max_results"] = 100;
+        params["results"] = 0;
+        params["song_detail"] = 1;
         axios
             .get("/api/search/songs", {
                 params: params,
@@ -3376,47 +3366,47 @@ class AudioApp extends React.Component {
                     edit_type: type,
                     edit_info: params,
                     edit_data: response.data.data,
-                })
+                });
             })
             .catch(function(error) {
-                console.log(error)
-            })
-    }
+                console.log(error);
+            });
+    };
     openEditModal = event => {
-        document.getElementById("edit-modal-loading").style.display = "block"
-        document.getElementById("modal-cover").classList.add("modal-active")
+        document.getElementById("edit-modal-loading").style.display = "block";
+        document.getElementById("modal-cover").classList.add("modal-active");
         document.getElementById("edit-modal-content").style.visibility =
-            "visible"
+            "visible";
         document
             .getElementById("edit-modal-content")
-            .classList.add("modal-active")
-    }
+            .classList.add("modal-active");
+    };
     onEditSuccess = (propagating_changes, response) => {
-        this.forceUpdate()
-        let playlist = this.state.current_playlist
-        let image_id = response.data.image_id
+        this.forceUpdate();
+        let playlist = this.state.current_playlist;
+        let image_id = response.data.image_id;
         for (let i = 0; i < response.data.data.length; i++) {
             let playlist_songs = document.getElementsByClassName(
                 "playlist-song-id-" + response.data.data[i].id
-            )
+            );
             if (playlist_songs.length > 0) {
-                let rowIndex = playlist_songs[0].rowIndex
+                let rowIndex = playlist_songs[0].rowIndex;
                 for (let j = 0; j < propagating_columns.length; j++) {
                     if (propagating_changes[propagating_columns[j]] != null) {
                         playlist[rowIndex - 1][propagating_columns[j]] =
-                            propagating_changes[propagating_columns[j]]
+                            propagating_changes[propagating_columns[j]];
                     }
                 }
                 if (image_id != null) {
-                    playlist[rowIndex - 1]["image_id"] = image_id
+                    playlist[rowIndex - 1]["image_id"] = image_id;
                 }
             }
         }
         this.setState({
             current_playlist: playlist,
             next_id: getNextIndex(playlist, this.state.current_index),
-        })
-    }
+        });
+    };
     openImage = image_id => event => {
         if (image_id != null) {
             window.open(
@@ -3424,17 +3414,17 @@ class AudioApp extends React.Component {
                     "/api/song/" +
                     image_id +
                     "/picture?size=1000"
-            )
+            );
         }
-    }
+    };
     render() {
-        const subcomponent_type = this.state.child_type
-        const shuffle = this.state.shuffle
-        let song_info = null
-        let image_id = null
-        let playlist_songs = []
+        const subcomponent_type = this.state.child_type;
+        const shuffle = this.state.shuffle;
+        let song_info = null;
+        let image_id = null;
+        let playlist_songs = [];
         // create the subcomponent
-        let subcomponent = null
+        let subcomponent = null;
         if (
             subcomponent_type === "song-list" ||
             subcomponent_type === "song-list-album" ||
@@ -3463,7 +3453,7 @@ class AudioApp extends React.Component {
                     artistSongs={this.artistSongs}
                     editInfo={this.editInfo}
                 />
-            )
+            );
         } else if (
             subcomponent_type === "album-list" ||
             subcomponent_type === "artist-list" ||
@@ -3487,12 +3477,12 @@ class AudioApp extends React.Component {
                     artistSongs={this.artistSongs}
                     editInfo={this.editInfo}
                 />
-            )
+            );
         } else {
-            subcomponent = <WelcomeTest />
+            subcomponent = <WelcomeTest />;
         }
 
-        let edit_modal = null
+        let edit_modal = null;
         if (this.state.edit_type != null) {
             edit_modal = (
                 <EditModal
@@ -3502,15 +3492,15 @@ class AudioApp extends React.Component {
                     onEditSuccess={this.onEditSuccess}
                     closeModals={this.closeModals}
                 />
-            )
+            );
         }
 
         // creates the playlistsong elements for the playlist
         if (this.state.current_playlist.length > 0) {
-            song_info = this.state.current_playlist[this.state.current_index]
-            document.title = song_info.title // set title of page to the currently playing song's title
-            image_id = song_info.image_id
-            let focus = this.state.playlistScroll / 46
+            song_info = this.state.current_playlist[this.state.current_index];
+            document.title = song_info.title; // set title of page to the currently playing song's title
+            image_id = song_info.image_id;
+            let focus = this.state.playlistScroll / 46;
             for (let i = 0; i < this.state.current_playlist.length; i++) {
                 // use the playlist_id as the key - this prevents us from having to rerender the playlistsong each time
                 // we shuffle or add more songs to the queue, but it also technically makes the object immutable from the parent
@@ -3536,10 +3526,10 @@ class AudioApp extends React.Component {
                         editInfo={this.editInfo}
                         getPlaylistEditData={this.getPlaylistEditData}
                     />
-                )
+                );
             }
         } else {
-            document.title = "React App"
+            document.title = "React App";
         }
 
         const RoutingDummyWithProps = props => {
@@ -3548,8 +3538,8 @@ class AudioApp extends React.Component {
                     updateNavigation={this.updateNavigation}
                     {...props}
                 />
-            )
-        }
+            );
+        };
         return (
             <div>
                 {/* Link navigation */}
@@ -3986,11 +3976,11 @@ class AudioApp extends React.Component {
                     </div>
                 </nav>
             </div>
-        )
+        );
     }
     componentDidUpdate(prevProps, prevState) {
         // update the currently playing songs whenever this component updates (since that means the playlist likely changed somehow)
-        this.updatePlaying()
+        this.updatePlaying();
 
         // updates the second audio object
         if (
@@ -3998,62 +3988,62 @@ class AudioApp extends React.Component {
             prevState.next_id !== this.state.next_id &&
             this.state.next_id != null
         ) {
-            let next_id = this.state.next_id
+            let next_id = this.state.next_id;
             setTimeout(() => {
                 if (next_id !== this.state.next_id) {
-                    return
+                    return;
                 }
                 let next_audio =
-                    this.state.active_audio === "audio" ? "audio2" : "audio"
-                let audio = document.getElementById(next_audio)
-                audio.pause()
+                    this.state.active_audio === "audio" ? "audio2" : "audio";
+                let audio = document.getElementById(next_audio);
+                audio.pause();
                 audio.src =
                     "http://stella.test/api/song/" +
                     this.state.next_id +
-                    "/audio?bitrate=320&remove_metadata=1"
-                audio.load()
-            }, 1000)
+                    "/audio?bitrate=320&remove_metadata=1";
+                audio.load();
+            }, 1000);
         }
     }
 }
 
 class RoutingDummy extends React.Component {
     render() {
-        return null
+        return null;
     }
     componentDidUpdate(prevProps) {
         if (this.props.location.key !== prevProps.location.key) {
-            this.props.updateNavigation(this.props.location)
+            this.props.updateNavigation(this.props.location);
         }
     }
     componentDidMount() {
-        this.props.updateNavigation(this.props.location)
+        this.props.updateNavigation(this.props.location);
     }
 }
 
 // upon any window click, remove all currently active dropdowns
 window.addEventListener("click", event => {
     if (!event.target.matches(".dropdown-button")) {
-        let dropdowns = document.getElementsByClassName("dropdown-menu show")
+        let dropdowns = document.getElementsByClassName("dropdown-menu show");
         while (dropdowns.length > 0) {
-            dropdowns[0].classList.remove("show")
+            dropdowns[0].classList.remove("show");
         }
     }
-})
+});
 
 window.addEventListener("scroll", event => {
-    let dropdowns = document.getElementsByClassName("dropdown-menu show")
+    let dropdowns = document.getElementsByClassName("dropdown-menu show");
     while (dropdowns.length > 0) {
-        dropdowns[0].classList.remove("show")
+        dropdowns[0].classList.remove("show");
     }
-})
+});
 
 // REACT ========================================
 
-const AudioAppRouter = withRouter(AudioApp)
+const AudioAppRouter = withRouter(AudioApp);
 ReactDOM.render(
     <BrowserRouter>
         <AudioAppRouter />
     </BrowserRouter>,
     document.getElementById("root")
-)
+);

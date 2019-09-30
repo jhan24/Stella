@@ -6,16 +6,16 @@ export const getSelectedRows = (
     list: Array<mixed>,
     alt_list: Array<mixed>
 ): Array<mixed> => {
-    let selected: any = document.getElementsByClassName("table-selected")
+    const selected: any = document.getElementsByClassName("table-selected");
     if (alt_list != null) {
         if (selected.length > 0 && selected[0].classList.contains("song-row")) {
-            list = alt_list
+            list = alt_list;
         }
     }
-    let songs = []
+    const songs = [];
     for (let i = 0; i < selected.length; i++) {
-        let index = selected[i].rowIndex - 1
-        songs.push(list[index])
+        const index = selected[i].rowIndex - 1;
+        songs.push(list[index]);
     }
-    return songs
-}
+    return songs;
+};

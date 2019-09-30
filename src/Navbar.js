@@ -1,9 +1,14 @@
-import React from "react"
-import { getSelectedRows } from "./componentUtils.js"
+// @flow
 
-export default class Navbar extends React.Component {
-    constructor(props) {
-        super(props)
+import React from "react";
+import { getSelectedRows } from "./componentUtils.js";
+
+type Props = any;
+type State = any;
+
+export default class Navbar extends React.Component<Props, State> {
+    constructor(props: Props) {
+        super(props);
         this.state = {
             search: "",
             selected: 0,
@@ -14,76 +19,83 @@ export default class Navbar extends React.Component {
                 "star_border",
                 "star_border",
             ],
-        }
+        };
     }
-    handleSubmit = event => {
-        event.preventDefault()
-        this.props.onSearchClick(this.state.search, this.state.selected)
-    }
-    handleChange = event => {
-        this.setState({ search: event.target.value })
-    }
-    onSearchType = type => event => {
-        this.setState({ selected: type })
-    }
-    addNext = event => {
+    handleSubmit = (event: SyntheticEvent<>) => {
+        event.preventDefault();
+        this.props.onSearchClick(this.state.search, this.state.selected);
+    };
+    handleChange = (event: SyntheticEvent<HTMLInputElement>) => {
+        (event.currentTarget: HTMLInputElement);
+        this.setState({ search: event.currentTarget.value });
+    };
+    onSearchType = type => (event: SyntheticEvent<>) => {
+        this.setState({ selected: type });
+    };
+    addNext = (event: SyntheticEvent<>) => {
         this.props.addToPlaylist(
             getSelectedRows(
                 this.props.current_playlist,
                 this.props.child_data.data
             ),
             1
-        )
-    }
-    addQueue = event => {
+        );
+    };
+    addQueue = (event: SyntheticEvent<>) => {
         this.props.addToPlaylist(
             getSelectedRows(
                 this.props.current_playlist,
                 this.props.child_data.data
             ),
             0
-        )
-    }
-    editInfo = event => {
+        );
+    };
+    editInfo = (event: SyntheticEvent<>) => {
         this.props.editInfo(
             "song",
             getSelectedRows(
                 this.props.current_playlist,
                 this.props.child_data.data
             )
-        )
-    }
-    updateRating = new_rating => event => {
-        let selected = document.getElementsByClassName("table-selected")
-        let list = this.props.current_playlist
+        );
+    };
+    updateRating = new_rating => (event: SyntheticEvent<>) => {
+        let selected: any = document.getElementsByClassName("table-selected");
+        let list = this.props.current_playlist;
         if (selected.length > 0 && selected[0].classList.contains("song-row")) {
-            list = this.props.child_data.data
+            list = this.props.child_data.data;
         }
-        let song_ids = []
+        let song_ids = [];
         for (let i = 0; i < selected.length; i++) {
-            song_ids.push(list[selected[i].rowIndex - 1].id)
+            song_ids.push(list[selected[i].rowIndex - 1].id);
         }
-        this.props.updateRatings(new_rating, song_ids)
+        this.props.updateRatings(new_rating, song_ids);
 
         // modify the navbar rating stars
-        let rating_stars = document.getElementsByClassName("navbar-rating")
-        let rating_tier = Math.floor((new_rating + 32) / 64) + 1
+        let rating_stars = document.getElementsByClassName("navbar-rating");
+        let rating_tier = Math.floor((new_rating + 32) / 64) + 1;
         for (let i = 0; i < rating_stars.length; i++) {
             if (i < rating_tier) {
-                rating_stars[i].innerHTML = "star"
+                rating_stars[i].innerHTML = "star";
             } else {
-                rating_stars[i].innerHTML = "star_border"
+                rating_stars[i].innerHTML = "star_border";
             }
         }
-    }
-    onMouseEnter = event => {
-        document.getElementById("search-button-group").style.opacity = 100
-    }
-    onMouseLeave = event => {
-        document.getElementById("search-button-group").style.opacity = 0
-    }
+    };
+    onMouseEnterSearchOptions = (event: SyntheticEvent<>) => {
+        const element = document.getElementById("search-button-group");
+        if (element != null) {
+            element.style.opacity = "100";
+        }
+    };
+    onMouseLeaveSearchOptions = (event: SyntheticEvent<>) => {
+        const element = document.getElementById("search-button-group");
+        if (element != null) {
+            element.style.opacity = "0";
+        }
+    };
     render() {
-        const stars = this.state.stars
+        const stars = this.state.stars;
         return (
             <div>
                 <nav
@@ -95,8 +107,8 @@ export default class Navbar extends React.Component {
                     }}
                     id="main-navbar"
                     className="navbar navbar-expand-lg navbar-light bg-light"
-                    onMouseEnter={this.onMouseEnter}
-                    onMouseLeave={this.onMouseLeave}
+                    onMouseEnter={this.onMouseEnterSearchOptions}
+                    onMouseLeave={this.onMouseLeaveSearchOptions}
                 >
                     <a className="navbar-brand">Stella</a>
                     <button
@@ -369,6 +381,6 @@ export default class Navbar extends React.Component {
                     </div>
                 </nav>
             </div>
-        )
+        );
     }
 }

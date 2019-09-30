@@ -4,7 +4,7 @@ export type column_object = {
     type: number,
     availability: 0 | 1 | 2,
     name: string,
-}
+};
 
 export type column =
     | "search"
@@ -30,7 +30,7 @@ export type column =
     | "created_at"
     | "updated_at"
     | "play_count"
-    | "image"
+    | "image";
 
 // type 0: string, 1: int, 2: date
 // availability 0: always, 1: alt_specific
@@ -155,7 +155,7 @@ export const column_objects: { [string]: column_object } = {
         availability: 2,
         name: "Album Artwork",
     },
-}
+};
 
 export const editable_columns: Array<column> = [
     "title",
@@ -178,14 +178,14 @@ export const editable_columns: Array<column> = [
     "genre",
     "rating",
     "image",
-]
+];
 
 export const propagating_columns: Array<column> = [
     "title",
     "artist",
     "album",
     "rating",
-]
+];
 
 export const searchable_columns: Array<column> = [
     "search",
@@ -207,4 +207,4 @@ export const searchable_columns: Array<column> = [
     "created_at",
     "updated_at",
     "play_count",
-]
+];

@@ -4,7 +4,7 @@ import React from "react";
 import { getSelectedRows } from "../../componentUtils.js";
 
 type Props = any;
-type State = any;
+type State = {| search: string, selected: number |};
 
 export default class Navbar extends React.Component<Props, State> {
     constructor(props: Props) {
@@ -12,13 +12,6 @@ export default class Navbar extends React.Component<Props, State> {
         this.state = {
             search: "",
             selected: 0,
-            stars: [
-                "star_border",
-                "star_border",
-                "star_border",
-                "star_border",
-                "star_border",
-            ],
         };
     }
     handleSubmit = (event: SyntheticEvent<>) => {
@@ -95,7 +88,6 @@ export default class Navbar extends React.Component<Props, State> {
         }
     };
     render() {
-        const stars = this.state.stars;
         return (
             <div>
                 <nav
@@ -325,7 +317,7 @@ export default class Navbar extends React.Component<Props, State> {
                                             left: 5,
                                         }}
                                     >
-                                        {stars[0]}
+                                        {"star_border"}
                                     </i>
                                     <i
                                         id="navbar-rating-2"
@@ -337,7 +329,7 @@ export default class Navbar extends React.Component<Props, State> {
                                             left: 25,
                                         }}
                                     >
-                                        {stars[1]}
+                                        {"star_border"}
                                     </i>
                                     <i
                                         id="navbar-rating-3"
@@ -349,7 +341,7 @@ export default class Navbar extends React.Component<Props, State> {
                                             left: 45,
                                         }}
                                     >
-                                        {stars[2]}
+                                        {"star_border"}
                                     </i>
                                     <i
                                         id="navbar-rating-4"
@@ -361,7 +353,7 @@ export default class Navbar extends React.Component<Props, State> {
                                             left: 65,
                                         }}
                                     >
-                                        {stars[3]}
+                                        {"star_border"}
                                     </i>
                                     <i
                                         id="navbar-rating-5"
@@ -373,7 +365,7 @@ export default class Navbar extends React.Component<Props, State> {
                                             left: 85,
                                         }}
                                     >
-                                        {stars[4]}
+                                        {"star_border"}
                                     </i>
                                 </div>
                             </li>

@@ -29,7 +29,6 @@ export default class Navbar extends React.Component {
     addNext = event => {
         this.props.addToPlaylist(
             getSelectedRows(
-                event,
                 this.props.current_playlist,
                 this.props.child_data.data
             ),
@@ -39,7 +38,6 @@ export default class Navbar extends React.Component {
     addQueue = event => {
         this.props.addToPlaylist(
             getSelectedRows(
-                event,
                 this.props.current_playlist,
                 this.props.child_data.data
             ),
@@ -50,7 +48,6 @@ export default class Navbar extends React.Component {
         this.props.editInfo(
             "song",
             getSelectedRows(
-                event,
                 this.props.current_playlist,
                 this.props.child_data.data
             )

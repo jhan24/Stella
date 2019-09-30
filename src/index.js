@@ -524,20 +524,20 @@ class SongList extends React.Component {
     }
     addNext = event => {
         this.props.addToPlaylist(
-            getSelectedRows(event, this.props.data.data),
+            getSelectedRows(this.props.data.data),
             1
         )
     }
     addQueue = event => {
         this.props.addToPlaylist(
-            getSelectedRows(event, this.props.data.data),
+            getSelectedRows(this.props.data.data),
             0
         )
     }
     editInfo = event => {
         this.props.editInfo(
             "song",
-            getSelectedRows(event, this.props.data.data)
+            getSelectedRows(this.props.data.data)
         )
     }
     addAllToPlaylist = method => event => {
@@ -2563,20 +2563,20 @@ class AudioApp extends React.Component {
 
     addNext = event => {
         this.addToPlaylist(
-            getSelectedRows(event, this.state.current_playlist),
+            getSelectedRows(this.state.current_playlist),
             1
         )
     }
     addQueue = event => {
         this.addToPlaylist(
-            getSelectedRows(event, this.state.current_playlist),
+            getSelectedRows(this.state.current_playlist),
             0
         )
     }
     getPlaylistEditData = event => {
         this.editInfo(
             "song",
-            getSelectedRows(event, this.state.current_playlist)
+            getSelectedRows(this.state.current_playlist)
         )
     }
     addToPlaylist = (data, next) => {

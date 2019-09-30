@@ -1,7 +1,7 @@
 // @flow
 
 // turn seconds into MM:SS
-export function formatTime(t: number) {
+export function formatTime(t: number): string {
     t = Math.floor(t)
     let minutes = Math.floor(t / 60)
     let seconds = t - minutes * 60
@@ -11,7 +11,7 @@ export function formatTime(t: number) {
 export function getNextIndex(
     playlist: Array<{ id: number }>,
     current_index: number
-) {
+): ?number {
     let next_index = current_index + 1
     if (next_index >= playlist.length) {
         // wrap around at end
@@ -25,7 +25,7 @@ export function getNextIndex(
     }
 }
 
-export function removeActiveNavbar() {
+export function removeActiveNavbar(): void {
     let navbarItems = document.getElementsByClassName("main-navbar-item active")
     for (let i = 0; i < navbarItems.length; i++) {
         navbarItems[i].classList.remove("active")
@@ -37,7 +37,7 @@ export function removeActiveNavbar() {
  * @param {Array} a items An array containing the items.
  * @param {id} an element index to place at the beginning of the array
  */
-export function shuffle(a: Array<mixed>, id: number) {
+export function shuffle(a: Array<mixed>, id: number): Array<mixed> {
     let j, x, i, c
     c = 0
 

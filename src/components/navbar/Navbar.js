@@ -2,16 +2,19 @@
 
 import React from "react";
 import { getSelectedRows } from "../../componentUtils.js";
+import NavbarSearchTypeButton from "./NavbarSearchTypeButton.js";
+
+import type { NavbarSearchTypeButtonID } from "./NavbarSearchTypeButton.js";
 
 type Props = any;
-type State = {| search: string, selected: number |};
+type State = {| search: string, selected: NavbarSearchTypeButtonID |};
 
 export default class Navbar extends React.Component<Props, State> {
     constructor(props: Props) {
         super(props);
         this.state = {
             search: "",
-            selected: 0,
+            selected: "song",
         };
     }
     handleSubmit = (event: SyntheticEvent<>) => {
@@ -22,7 +25,7 @@ export default class Navbar extends React.Component<Props, State> {
         (event.currentTarget: HTMLInputElement);
         this.setState({ search: event.currentTarget.value });
     };
-    onSearchType = (type: number) => (event: SyntheticEvent<>) => {
+    onSearchTypeClick = (type: NavbarSearchTypeButtonID) => {
         this.setState({ selected: type });
     };
     addNext = (event: SyntheticEvent<>) => {
@@ -53,20 +56,20 @@ export default class Navbar extends React.Component<Props, State> {
         );
     };
     updateRating = (new_rating: number) => (event: SyntheticEvent<>) => {
-        let selected: any = document.getElementsByClassName("table-selected");
+        const selected: any = document.getElementsByClassName("table-selected");
         let list = this.props.current_playlist;
         if (selected.length > 0 && selected[0].classList.contains("song-row")) {
             list = this.props.child_data.data;
         }
-        let song_ids = [];
+        const song_ids = [];
         for (let i = 0; i < selected.length; i++) {
             song_ids.push(list[selected[i].rowIndex - 1].id);
         }
         this.props.updateRatings(new_rating, song_ids);
 
         // modify the navbar rating stars
-        let rating_stars = document.getElementsByClassName("navbar-rating");
-        let rating_tier = Math.floor((new_rating + 32) / 64) + 1;
+        const rating_stars = document.getElementsByClassName("navbar-rating");
+        const rating_tier = Math.floor((new_rating + 32) / 64) + 1;
         for (let i = 0; i < rating_stars.length; i++) {
             if (i < rating_tier) {
                 rating_stars[i].innerHTML = "star";
@@ -176,6 +179,7 @@ export default class Navbar extends React.Component<Props, State> {
                                 </a>
                             </li>
                         </ul>
+
                         <form
                             className="form-inline my-2 my-lg-0"
                             onSubmit={this.handleSubmit}
@@ -186,54 +190,26 @@ export default class Navbar extends React.Component<Props, State> {
                                 style={{ opacity: 0, paddingRight: 10 }}
                                 data-toggle="buttons"
                             >
-                                <label
-                                    className="btn btn-outline-success active"
-                                    onClick={this.onSearchType(0)}
-                                >
-                                    <input
-                                        type="radio"
-                                        name="options"
-                                        id="song-rb"
-                                        autoComplete="off"
-                                    />
-                                    Songs
-                                </label>
-                                <label
-                                    className="btn btn-outline-success"
-                                    onClick={this.onSearchType(1)}
-                                >
-                                    <input
-                                        type="radio"
-                                        name="options"
-                                        id="album-rb"
-                                        autoComplete="off"
-                                    />
-                                    Albums
-                                </label>
-                                <label
-                                    className="btn btn-outline-success"
-                                    onClick={this.onSearchType(2)}
-                                >
-                                    <input
-                                        type="radio"
-                                        name="options"
-                                        id="album_artist-rb"
-                                        autoComplete="off"
-                                    />
-                                    Artists
-                                </label>
-                                <label
-                                    className="btn btn-outline-success"
-                                    onClick={this.onSearchType(3)}
-                                >
-                                    <input
-                                        type="radio"
-                                        name="options"
-                                        id="artist-rb"
-                                        autoComplete="off"
-                                    />
-                                    All Artists
-                                </label>
+                                <NavbarSearchTypeButton
+                                    id="song"
+                                    onClick={this.onSearchTypeClick}
+                                    activeId={this.state.selected}
+                                />
+                                <NavbarSearchTypeButton
+                                    id="album"
+                                    onClick={this.onSearchTypeClick}
+                                    activeId={this.state.selected}
+                                />
+                                <NavbarSearchTypeButton
+                                    id="album_artist"
+                                    onClick={this.onSearchTypeClick}
+                                    activeId={this.state.selected}
+                                />
+                                <NavbarSearchTypeButton
+                                    id="artist"
+                                    onClick={this.onSearchTypeClick}
+                                    activeId={this.state.selected}
+                                />
                             </div>
                             <input
                                 id="generic-search-input"

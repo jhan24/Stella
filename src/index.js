@@ -2695,25 +2695,27 @@ class AudioApp extends React.Component {
         request["base_url"] = "/api/search/songs";
         request["base_params"] = {};
 
-        if (type === 0) {
+            console.log(type);
+
+        if (type === 'song') {
             child_type = "song-list";
             request["base_params"]["results"] = "song";
             request["base_params"]["search"] = search;
             sort = "title";
-        } else if (type === 1) {
+        } else if (type === 'album') {
             child_type = "album-list";
             request["base_params"]["results"] = "album";
             request["base_params"]["specific"] = 1;
             request["base_params"]["album"] = "LK:::" + search;
             sort = "album";
-        } else if (type === 2) {
+        } else if (type === 'album_artist') {
             child_type = "artist-list";
             request["base_params"]["results"] = "artist";
             request["base_params"]["specific"] = 1;
             request["base_params"]["album_artist"] = "LK:::" + search;
             sort = "album_artist";
         } else {
-            child_type = "artist-list";
+            child_type = "artist";
             request["base_params"]["results"] = "all_artists";
             request["base_params"]["strict_artist"] = search;
             request["base_params"]["artist"] = "LK:::" + search;

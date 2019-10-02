@@ -1,11 +1,13 @@
 // @flow
 
+export type Id = number;
+
 export type Song = {
     album: string,
     album_artist: string,
     artist: string,
     disc_number: ?number,
-    id: number,
+    id: Id,
     length: number,
     play_count: number,
     rating: number,

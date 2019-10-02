@@ -3,14 +3,14 @@
 import React from "react";
 import { getSelectedRows } from "../../componentUtils.js";
 
-import type { EditType, Song } from "../../types.js";
+import type { EditType, Id, Song } from "../../types.js";
 
 type Props = {|
     child_data: any,
     current_playlist: Array<Song>,
     onAddToPlaylist: (Array<Song>, number) => void,
     onEditInfo: (EditType, Array<Song>) => void,
-    onUpdateRatings: (number, Array<number>) => void,
+    onUpdateRatings: (number, Array<Id>) => void,
 |};
 
 export default class NavbarForSelectedItems extends React.Component<Props> {
@@ -53,7 +53,7 @@ export default class NavbarForSelectedItems extends React.Component<Props> {
         }
 
         // map the selected elements to the data
-        const song_ids = [];
+        const song_ids: Array<Id> = [];
         for (let i = 0; i < selected.length; i++) {
             song_ids.push(list[selected[i].rowIndex - 1].id);
         }

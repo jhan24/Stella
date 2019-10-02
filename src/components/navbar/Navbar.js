@@ -5,8 +5,9 @@ import NavbarSearchTypeButton from "./NavbarSearchTypeButton.js";
 import NavbarForSelectedItems from "./NavbarForSelectedItems.js";
 
 import type { SearchType } from "./NavbarSearchTypeButton.js";
+import type { Id } from "../../types.js";
 
-type Props = {updateRatings: (number, Array<number>) => void} & any;
+type Props = {updateRatings: (number, Array<Id>) => void} & any;
 type State = {| search: string, selected_id: SearchType |};
 
 export default class Navbar extends React.Component<Props, State> {

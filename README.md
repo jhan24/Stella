@@ -13,3 +13,5 @@ Features not in Google Play Music:
 Still has several minor bugs and is definitely not ready to work straight out of the box if you clone it, so don't try doing that.
 
 No live demo due to security/copyright/legal issues, but you can check the screenshots (or ask me directly).
+
+Note that this only includes the client code.

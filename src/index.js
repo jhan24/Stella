@@ -3008,7 +3008,7 @@ class AudioApp extends React.Component {
         event.preventDefault();
         renderContextMenu(event, "playlist", "playlist-row");
     };
-    updateRatings = (new_rating, ids) => {
+    updateRatings = (new_rating: number, ids: Array<number>) => {
         // encode new rating and list of ids to update as form data, then update in db
         let ratingUpdate = new FormData();
         ratingUpdate.append("rating", new_rating);

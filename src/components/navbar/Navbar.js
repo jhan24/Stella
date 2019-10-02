@@ -4,29 +4,29 @@ import React from "react";
 import NavbarSearchTypeButton from "./NavbarSearchTypeButton.js";
 import NavbarForSelectedItems from "./NavbarForSelectedItems.js";
 
-import type { NavbarSearchTypeButtonID } from "./NavbarSearchTypeButton.js";
+import type { SearchType } from "./NavbarSearchTypeButton.js";
 
 type Props = {updateRatings: (number, Array<number>) => void} & any;
-type State = {| search: string, selected: NavbarSearchTypeButtonID |};
+type State = {| search: string, selected_id: SearchType |};
 
 export default class Navbar extends React.Component<Props, State> {
     constructor(props: Props) {
         super(props);
         this.state = {
             search: "",
-            selected: "song",
+            selected_id: "song",
         };
     }
     handleSubmit = (event: SyntheticEvent<>) => {
         event.preventDefault();
-        this.props.onSearchClick(this.state.search, this.state.selected);
+        this.props.onSearchClick(this.state.search, this.state.selected_id);
     };
     handleChange = (event: SyntheticEvent<HTMLInputElement>) => {
         (event.currentTarget: HTMLInputElement);
         this.setState({ search: event.currentTarget.value });
     };
-    onSearchTypeClick = (type: NavbarSearchTypeButtonID) => {
-        this.setState({ selected: type });
+    onSearchTypeClick = (type: SearchType) => {
+        this.setState({ selected_id: type });
     };
     onMouseEnterSearchOptions = (event: SyntheticEvent<>) => {
         const element = document.getElementById("search-button-group");
@@ -143,22 +143,22 @@ export default class Navbar extends React.Component<Props, State> {
                                 <NavbarSearchTypeButton
                                     id="song"
                                     onClick={this.onSearchTypeClick}
-                                    activeId={this.state.selected}
+                                    active_id={this.state.selected_id}
                                 />
                                 <NavbarSearchTypeButton
                                     id="album"
                                     onClick={this.onSearchTypeClick}
-                                    activeId={this.state.selected}
+                                    active_id={this.state.selected_id}
                                 />
                                 <NavbarSearchTypeButton
                                     id="album_artist"
                                     onClick={this.onSearchTypeClick}
-                                    activeId={this.state.selected}
+                                    active_id={this.state.selected_id}
                                 />
                                 <NavbarSearchTypeButton
                                     id="artist"
                                     onClick={this.onSearchTypeClick}
-                                    activeId={this.state.selected}
+                                    active_id={this.state.selected_id}
                                 />
                             </div>
                             <input
@@ -182,11 +182,11 @@ export default class Navbar extends React.Component<Props, State> {
                 </nav>
 
                 <NavbarForSelectedItems
-                    addToPlaylist={this.props.addToPlaylist}
                     child_data={this.props.child_data}
                     current_playlist={this.props.current_playlist}
-                    editInfo={this.props.editInfo}
-                    updateRatings={this.props.updateRatings}
+                    onAddToPlaylist={this.props.addToPlaylist}
+                    onEditInfo={this.props.editInfo}
+                    onUpdateRatings={this.props.updateRatings}
                 />
             </div>
         );

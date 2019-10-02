@@ -1,11 +1,15 @@
 // @flow
 
+import type { Song } from "./types.js";
+
 // get song info for all selected rows
 // supplying both list and alt_list will have the function look at the returned element's classes to determine the list to use
 export const getSelectedRows = (
-    list: Array<mixed>,
-    alt_list: Array<mixed>
-): Array<mixed> => {
+    list: Array<Song>,
+    alt_list: Array<Song>
+): Array<Song> => {
+    console.log(list);
+    console.log(alt_list);
     const selected: any = document.getElementsByClassName("table-selected");
     if (alt_list != null) {
         if (selected.length > 0 && selected[0].classList.contains("song-row")) {

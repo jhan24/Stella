@@ -2,16 +2,12 @@
 
 import React from "react";
 
-export type NavbarSearchTypeButtonID =
-    | "song"
-    | "album"
-    | "album_artist"
-    | "artist";
+export type SearchType = "song" | "album" | "album_artist" | "artist";
 
 type Props = {|
-    +activeId: NavbarSearchTypeButtonID,
-    +id: NavbarSearchTypeButtonID,
-    +onClick: NavbarSearchTypeButtonID => void,
+    +active_id: SearchType,
+    +id: SearchType,
+    +onClick: SearchType => void,
 |};
 
 export default class NavbarSearchTypeButton extends React.Component<Props> {
@@ -35,12 +31,12 @@ export default class NavbarSearchTypeButton extends React.Component<Props> {
         }
     }
     render() {
-        const { activeId, id } = this.props;
-        const activeClass = activeId === id ? "active" : "";
+        const { active_id, id } = this.props;
+        const active_class = active_id === id ? "active" : "";
         const label = this.getLabel();
         return (
             <label
-                className={"btn btn-outline-success " + activeClass}
+                className={"btn btn-outline-success " + active_class}
                 onClick={this.onClick}
             >
                 <input

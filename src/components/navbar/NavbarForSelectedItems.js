@@ -3,17 +3,19 @@
 import React from "react";
 import { getSelectedRows } from "../../componentUtils.js";
 
+import type { EditType, Song } from "../../types.js";
+
 type Props = {|
-    addToPlaylist: any,
     child_data: any,
-    current_playlist: Array<any>,
-    editInfo: any,
-    updateRatings: any,
+    current_playlist: Array<Song>,
+    onAddToPlaylist: (Array<Song>, number) => void,
+    onEditInfo: (EditType, Array<Song>) => void,
+    onUpdateRatings: (number, Array<number>) => void,
 |};
 
 export default class NavbarForSelectedItems extends React.Component<Props> {
-    addNext = (event: SyntheticEvent<>) => {
-        this.props.addToPlaylist(
+    onAddNext = (event: SyntheticEvent<>) => {
+        this.props.onAddToPlaylist(
             getSelectedRows(
                 this.props.current_playlist,
                 this.props.child_data.data
@@ -21,8 +23,9 @@ export default class NavbarForSelectedItems extends React.Component<Props> {
             1
         );
     };
-    addQueue = (event: SyntheticEvent<>) => {
-        this.props.addToPlaylist(
+
+    onAddToQueue = (event: SyntheticEvent<>) => {
+        this.props.onAddToPlaylist(
             getSelectedRows(
                 this.props.current_playlist,
                 this.props.child_data.data
@@ -30,8 +33,9 @@ export default class NavbarForSelectedItems extends React.Component<Props> {
             0
         );
     };
-    editInfo = (event: SyntheticEvent<>) => {
-        this.props.editInfo(
+
+    onEditInfo = (event: SyntheticEvent<>) => {
+        this.props.onEditInfo(
             "song",
             getSelectedRows(
                 this.props.current_playlist,
@@ -39,17 +43,23 @@ export default class NavbarForSelectedItems extends React.Component<Props> {
             )
         );
     };
-    updateRating = (new_rating: number) => (event: SyntheticEvent<>) => {
+
+    onUpdateRating = (new_rating: number) => (event: SyntheticEvent<>) => {
+        // get the selected elements
         const selected: any = document.getElementsByClassName("table-selected");
         let list = this.props.current_playlist;
         if (selected.length > 0 && selected[0].classList.contains("song-row")) {
             list = this.props.child_data.data;
         }
+
+        // map the selected elements to the data
         const song_ids = [];
         for (let i = 0; i < selected.length; i++) {
             song_ids.push(list[selected[i].rowIndex - 1].id);
         }
-        this.props.updateRatings(new_rating, song_ids);
+
+        // parent processing
+        this.props.onUpdateRatings(new_rating, song_ids);
 
         // modify the navbar rating stars
         const rating_stars = document.getElementsByClassName("navbar-rating");
@@ -62,6 +72,7 @@ export default class NavbarForSelectedItems extends React.Component<Props> {
             }
         }
     };
+
     render() {
         return (
             <nav
@@ -100,17 +111,17 @@ export default class NavbarForSelectedItems extends React.Component<Props> {
                             </a>
                         </li>
                         <li className="nav-item">
-                            <a onClick={this.addNext} className="nav-link">
+                            <a onClick={this.onAddNext} className="nav-link">
                                 Play Next
                             </a>
                         </li>
                         <li className="nav-item">
-                            <a onClick={this.addQueue} className="nav-link">
+                            <a onClick={this.onAddToQueue} className="nav-link">
                                 Add to Queue
                             </a>
                         </li>
                         <li className="nav-item">
-                            <a onClick={this.editInfo} className="nav-link">
+                            <a onClick={this.onEditInfo} className="nav-link">
                                 Edit Info
                             </a>
                         </li>
@@ -118,7 +129,7 @@ export default class NavbarForSelectedItems extends React.Component<Props> {
                             <div style={{ position: "relative" }}>
                                 <i
                                     id="navbar-rating-1"
-                                    onClick={this.updateRating(1)}
+                                    onClick={this.onUpdateRating(1)}
                                     className="navbar-rating material-icons song-icon-button"
                                     style={{
                                         color: "gray",
@@ -130,7 +141,7 @@ export default class NavbarForSelectedItems extends React.Component<Props> {
                                 </i>
                                 <i
                                     id="navbar-rating-2"
-                                    onClick={this.updateRating(64)}
+                                    onClick={this.onUpdateRating(64)}
                                     className="navbar-rating material-icons song-icon-button"
                                     style={{
                                         color: "gray",
@@ -142,7 +153,7 @@ export default class NavbarForSelectedItems extends React.Component<Props> {
                                 </i>
                                 <i
                                     id="navbar-rating-3"
-                                    onClick={this.updateRating(128)}
+                                    onClick={this.onUpdateRating(128)}
                                     className="navbar-rating material-icons song-icon-button"
                                     style={{
                                         color: "gray",
@@ -154,7 +165,7 @@ export default class NavbarForSelectedItems extends React.Component<Props> {
                                 </i>
                                 <i
                                     id="navbar-rating-4"
-                                    onClick={this.updateRating(196)}
+                                    onClick={this.onUpdateRating(196)}
                                     className="navbar-rating material-icons song-icon-button"
                                     style={{
                                         color: "gray",
@@ -166,7 +177,7 @@ export default class NavbarForSelectedItems extends React.Component<Props> {
                                 </i>
                                 <i
                                     id="navbar-rating-5"
-                                    onClick={this.updateRating(255)}
+                                    onClick={this.onUpdateRating(255)}
                                     className="navbar-rating material-icons song-icon-button"
                                     style={{
                                         color: "gray",

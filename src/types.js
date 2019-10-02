@@ -1,12 +1,27 @@
 // @flow
 
-export type column_object = {
+export type Song = {
+    album: string,
+    album_artist: string,
+    artist: string,
+    disc_number: ?number,
+    id: number,
+    length: number,
+    play_count: number,
+    rating: number,
+    title: string,
+    track_number: ?number,
+};
+
+export type EditType = "song" | "songs" | "card";
+
+export type ColumnObject = {
     type: number,
     availability: 0 | 1 | 2,
     name: string,
 };
 
-export type column =
+export type Column =
     | "search"
     | "title"
     | "title_alt"
@@ -34,7 +49,7 @@ export type column =
 
 // type 0: string, 1: int, 2: date
 // availability 0: always, 1: alt_specific
-export const column_objects: { [string]: column_object } = {
+export const column_objects: { [Column]: ColumnObject } = {
     search: {
         type: 0,
         availability: 0,
@@ -157,7 +172,7 @@ export const column_objects: { [string]: column_object } = {
     },
 };
 
-export const editable_columns: Array<column> = [
+export const editable_columns: Array<Column> = [
     "title",
     "title_alt",
     "artist",
@@ -180,14 +195,14 @@ export const editable_columns: Array<column> = [
     "image",
 ];
 
-export const propagating_columns: Array<column> = [
+export const propagating_columns: Array<Column> = [
     "title",
     "artist",
     "album",
     "rating",
 ];
 
-export const searchable_columns: Array<column> = [
+export const searchable_columns: Array<Column> = [
     "search",
     "title",
     "title_alt",

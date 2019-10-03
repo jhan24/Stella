@@ -25,6 +25,10 @@ export function getNextIndex(
     }
 }
 
+export function ratingToTier(value: number) {
+    return Math.floor((value + 32) / 64) + 1;
+}
+
 export function removeActiveNavbar(): void {
     const navbarItems = document.getElementsByClassName(
         "main-navbar-item active"

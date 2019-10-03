@@ -1,19 +1,28 @@
 // @flow
 
 import React from "react";
+
 import { getSelectedRows } from "../../componentUtils.js";
+import NavbarRatingStar from "./NavbarRatingStar.js";
 
 import type { EditType, Id, Song } from "../../types.js";
 
 type Props = {|
-    child_data: any,
-    current_playlist: Array<Song>,
-    onAddToPlaylist: (Array<Song>, number) => void,
-    onEditInfo: (EditType, Array<Song>) => void,
-    onUpdateRatings: (number, Array<Id>) => void,
+    +child_data: any,
+    +current_playlist: Array<Song>,
+    +onAddToPlaylist: (Array<Song>, number) => void,
+    +onEditInfo: (EditType, Array<Song>) => void,
+    +onUpdateRatings: (number, Array<Id>) => void,
 |};
 
-export default class NavbarForSelectedItems extends React.Component<Props> {
+type State = {| display_value: number |};
+
+export default class NavbarForSelectedItems extends React.Component<
+    Props,
+    State
+> {
+    state: State = { display_value: 0 };
+
     onAddNext = (event: SyntheticEvent<>) => {
         this.props.onAddToPlaylist(
             getSelectedRows(
@@ -44,7 +53,7 @@ export default class NavbarForSelectedItems extends React.Component<Props> {
         );
     };
 
-    onUpdateRating = (new_rating: number) => (event: SyntheticEvent<>) => {
+    onUpdateRating = (new_rating: number) => {
         // get the selected elements
         const selected: any = document.getElementsByClassName("table-selected");
         let list = this.props.current_playlist;
@@ -62,18 +71,21 @@ export default class NavbarForSelectedItems extends React.Component<Props> {
         this.props.onUpdateRatings(new_rating, song_ids);
 
         // modify the navbar rating stars
-        const rating_stars = document.getElementsByClassName("navbar-rating");
-        const rating_tier = Math.floor((new_rating + 32) / 64) + 1;
-        for (let i = 0; i < rating_stars.length; i++) {
-            if (i < rating_tier) {
-                rating_stars[i].innerHTML = "star";
-            } else {
-                rating_stars[i].innerHTML = "star_border";
-            }
-        }
+        this.setState({ display_value: new_rating });
     };
 
     render() {
+        const rating_tiers = [1, 64, 128, 196, 256];
+        const rating_star_components = rating_tiers.map(rating => {
+            return (
+                <NavbarRatingStar
+                    display_value={this.state.display_value}
+                    onUpdateRating={this.onUpdateRating}
+                    value={rating}
+                />
+            );
+        });
+
         return (
             <nav
                 style={{
@@ -127,66 +139,7 @@ export default class NavbarForSelectedItems extends React.Component<Props> {
                         </li>
                         <li className="nav-item">
                             <div style={{ position: "relative" }}>
-                                <i
-                                    id="navbar-rating-1"
-                                    onClick={this.onUpdateRating(1)}
-                                    className="navbar-rating material-icons song-icon-button"
-                                    style={{
-                                        color: "gray",
-                                        top: 8,
-                                        left: 5,
-                                    }}
-                                >
-                                    {"star_border"}
-                                </i>
-                                <i
-                                    id="navbar-rating-2"
-                                    onClick={this.onUpdateRating(64)}
-                                    className="navbar-rating material-icons song-icon-button"
-                                    style={{
-                                        color: "gray",
-                                        top: 8,
-                                        left: 25,
-                                    }}
-                                >
-                                    {"star_border"}
-                                </i>
-                                <i
-                                    id="navbar-rating-3"
-                                    onClick={this.onUpdateRating(128)}
-                                    className="navbar-rating material-icons song-icon-button"
-                                    style={{
-                                        color: "gray",
-                                        top: 8,
-                                        left: 45,
-                                    }}
-                                >
-                                    {"star_border"}
-                                </i>
-                                <i
-                                    id="navbar-rating-4"
-                                    onClick={this.onUpdateRating(196)}
-                                    className="navbar-rating material-icons song-icon-button"
-                                    style={{
-                                        color: "gray",
-                                        top: 8,
-                                        left: 65,
-                                    }}
-                                >
-                                    {"star_border"}
-                                </i>
-                                <i
-                                    id="navbar-rating-5"
-                                    onClick={this.onUpdateRating(255)}
-                                    className="navbar-rating material-icons song-icon-button"
-                                    style={{
-                                        color: "gray",
-                                        top: 8,
-                                        left: 85,
-                                    }}
-                                >
-                                    {"star_border"}
-                                </i>
+                                {rating_star_components}
                             </div>
                         </li>
                     </ul>

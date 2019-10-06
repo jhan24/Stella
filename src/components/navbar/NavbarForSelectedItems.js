@@ -79,9 +79,10 @@ export default class NavbarForSelectedItems extends React.Component<
         const rating_star_components = rating_tiers.map(rating => {
             return (
                 <NavbarRatingStar
-                    display_value={this.state.display_value}
+                    key={rating}
                     onUpdateRating={this.onUpdateRating}
                     value={rating}
+                    value_to_display={this.state.display_value}
                 />
             );
         });

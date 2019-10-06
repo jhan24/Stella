@@ -5,9 +5,9 @@ import React from "react";
 import { ratingToTier } from "../../utils.js";
 
 type Props = {|
-    +display_value: number,
     +onUpdateRating: number => void,
     +value: number,
+    +value_to_display: number,
 |};
 
 export default class NavbarRatingStar extends React.Component<Props> {
@@ -25,10 +25,9 @@ export default class NavbarRatingStar extends React.Component<Props> {
     render() {
         const left_offset = 5 + (this._tier - 1) * 20;
         const icon =
-            this.props.value <= this.props.display_value
+            this.props.value <= this.props.value_to_display
                 ? "star"
                 : "star_border";
-        console.log(icon);
         return (
             <i
                 id={"navbar-rating-" + this._tier}

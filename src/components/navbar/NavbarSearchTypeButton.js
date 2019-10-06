@@ -2,38 +2,30 @@
 
 import React from "react";
 
-export type SearchType = "song" | "album" | "album_artist" | "artist";
+export const search_type = {
+    song: "Songs",
+    album: "Albums",
+    album_artist: "Artists",
+    artist: "All Artists",
+};
+
+export type SearchType = $Keys<typeof search_type>;
 
 type Props = {|
-    +active_id: SearchType,
-    +id: SearchType,
+    +active_type: SearchType,
+    +type: SearchType,
     +onClick: SearchType => void,
 |};
 
 export default class NavbarSearchTypeButton extends React.Component<Props> {
     onClick = (_event: SyntheticEvent<>): void => {
-        this.props.onClick(this.props.id);
+        this.props.onClick(this.props.type);
     };
-    getLabel(): string {
-        const id = this.props.id;
-        switch (id) {
-            case "song":
-                return "Songs";
-            case "album":
-                return "Albums";
-            case "album_artist":
-                return "Artists";
-            case "artist":
-                return "All Artists";
-            default:
-                (id: empty);
-                throw new String("Invalid id passed to NavbarSearchButton");
-        }
-    }
+    
     render() {
-        const { active_id, id } = this.props;
-        const active_class = active_id === id ? "active" : "";
-        const label = this.getLabel();
+        const { active_type, type } = this.props;
+        const active_class = active_type === type ? "active" : "";
+        const label = search_type[type];
         return (
             <label
                 className={"btn btn-outline-success " + active_class}
@@ -42,7 +34,7 @@ export default class NavbarSearchTypeButton extends React.Component<Props> {
                 <input
                     type="radio"
                     name="options"
-                    id={id + "-rb"}
+                    id={type + "-rb"}
                     autoComplete="off"
                 />
                 {label}

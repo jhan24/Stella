@@ -1,13 +1,15 @@
 // @flow
 
 import React from "react";
-import NavbarSearchTypeButton from "./NavbarSearchTypeButton.js";
+import NavbarSearchTypeButton, {
+    search_type,
+} from "./NavbarSearchTypeButton.js";
 import NavbarForSelectedItems from "./NavbarForSelectedItems.js";
 
 import type { SearchType } from "./NavbarSearchTypeButton.js";
 import type { Id } from "../../types.js";
 
-type Props = {updateRatings: (number, Array<Id>) => void} & any;
+type Props = { updateRatings: (number, Array<Id>) => void } & any;
 type State = {| search: string, selected_id: SearchType |};
 
 export default class Navbar extends React.Component<Props, State> {
@@ -42,6 +44,16 @@ export default class Navbar extends React.Component<Props, State> {
         }
     };
     render() {
+        const search_buttons = Object.keys(search_type).map(type => {
+            return (
+                <NavbarSearchTypeButton
+                    key={type}
+                    active_type={this.state.selected_id}
+                    onClick={this.onSearchTypeClick}
+                    type={type}
+                />
+            );
+        });
         return (
             <div>
                 <nav
@@ -141,26 +153,7 @@ export default class Navbar extends React.Component<Props, State> {
                                 style={{ opacity: 0, paddingRight: 10 }}
                                 data-toggle="buttons"
                             >
-                                <NavbarSearchTypeButton
-                                    id="song"
-                                    onClick={this.onSearchTypeClick}
-                                    active_id={this.state.selected_id}
-                                />
-                                <NavbarSearchTypeButton
-                                    id="album"
-                                    onClick={this.onSearchTypeClick}
-                                    active_id={this.state.selected_id}
-                                />
-                                <NavbarSearchTypeButton
-                                    id="album_artist"
-                                    onClick={this.onSearchTypeClick}
-                                    active_id={this.state.selected_id}
-                                />
-                                <NavbarSearchTypeButton
-                                    id="artist"
-                                    onClick={this.onSearchTypeClick}
-                                    active_id={this.state.selected_id}
-                                />
+                                {search_buttons}
                             </div>
                             <input
                                 id="generic-search-input"

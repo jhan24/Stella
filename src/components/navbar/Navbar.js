@@ -5,55 +5,29 @@ import NavbarSearchTypeButton, {
     search_type,
 } from "./NavbarSearchTypeButton.js";
 import NavbarForSelectedItems from "./NavbarForSelectedItems.js";
+import NavbarSearchForm from "./NavbarSearchForm.js";
 
 import type { SearchType } from "./NavbarSearchTypeButton.js";
 import type { Id } from "../../types.js";
 
 type Props = { updateRatings: (number, Array<Id>) => void } & any;
-type State = {| search: string, selected_id: SearchType |};
 
-export default class Navbar extends React.Component<Props, State> {
-    constructor(props: Props) {
-        super(props);
-        this.state = {
-            search: "",
-            selected_id: "song",
-        };
-    }
-    handleSubmit = (event: SyntheticEvent<>) => {
-        event.preventDefault();
-        this.props.onSearchClick(this.state.search, this.state.selected_id);
-    };
-    handleChange = (event: SyntheticEvent<HTMLInputElement>) => {
-        (event.currentTarget: HTMLInputElement);
-        this.setState({ search: event.currentTarget.value });
-    };
-    onSearchTypeClick = (type: SearchType) => {
-        this.setState({ selected_id: type });
-    };
+export default class Navbar extends React.Component<Props> {
     onMouseEnterSearchOptions = (event: SyntheticEvent<>) => {
         const element = document.getElementById("search-button-group");
         if (element != null) {
             element.style.opacity = "100";
         }
     };
+
     onMouseLeaveSearchOptions = (event: SyntheticEvent<>) => {
         const element = document.getElementById("search-button-group");
         if (element != null) {
             element.style.opacity = "0";
         }
     };
+
     render() {
-        const search_buttons = Object.keys(search_type).map(type => {
-            return (
-                <NavbarSearchTypeButton
-                    key={type}
-                    active_type={this.state.selected_id}
-                    onClick={this.onSearchTypeClick}
-                    type={type}
-                />
-            );
-        });
         return (
             <div>
                 <nav
@@ -143,35 +117,7 @@ export default class Navbar extends React.Component<Props, State> {
                             </li>
                         </ul>
 
-                        <form
-                            className="form-inline my-2 my-lg-0"
-                            onSubmit={this.handleSubmit}
-                        >
-                            <div
-                                id="search-button-group"
-                                className="btn-group btn-group-toggle"
-                                style={{ opacity: 0, paddingRight: 10 }}
-                                data-toggle="buttons"
-                            >
-                                {search_buttons}
-                            </div>
-                            <input
-                                id="generic-search-input"
-                                className="form-control mr-sm-2"
-                                type="search"
-                                placeholder="Search"
-                                autoComplete="off"
-                                aria-label="Search"
-                                value={this.state.search}
-                                onChange={this.handleChange}
-                            />
-                            <button
-                                className="btn btn-outline-success my-2 my-sm-0"
-                                type="submit"
-                            >
-                                Search
-                            </button>
-                        </form>
+                        <NavbarSearchForm onSubmit={this.props.onSearchClick} />
                     </div>
                 </nav>
 

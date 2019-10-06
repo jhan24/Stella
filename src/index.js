@@ -2695,8 +2695,6 @@ class AudioApp extends React.Component {
         request["base_url"] = "/api/search/songs";
         request["base_params"] = {};
 
-            console.log(type);
-
         if (type === 'song') {
             child_type = "song-list";
             request["base_params"]["results"] = "song";
@@ -2715,7 +2713,7 @@ class AudioApp extends React.Component {
             request["base_params"]["album_artist"] = "LK:::" + search;
             sort = "album_artist";
         } else {
-            child_type = "artist";
+            child_type = "artist-list";
             request["base_params"]["results"] = "all_artists";
             request["base_params"]["strict_artist"] = search;
             request["base_params"]["artist"] = "LK:::" + search;

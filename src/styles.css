@@ -49,7 +49,7 @@
 }
 
 .playlist-drag-active {
-	border-top: 2px solid #91BBFF;
+	border-top: 2px solid #CD5F7C;
 }
 
 .show {
@@ -73,7 +73,7 @@
 }
 
 .detail-page-link:hover {
-	color:#81BBFF;
+	color:#CD5F7C;
 }
 
 .dropdown-menu {

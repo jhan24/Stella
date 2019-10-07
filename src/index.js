@@ -43,7 +43,7 @@ let playlistCount = 0;
 let playlistTicking = false;
 
 axios.defaults.baseURL = "http://stella.test";
-const activeColor = "#91BBFF";
+export const active_color = "#CD5F7C";
 const inactiveColor = "black";
 
 const pageLength = 50;
@@ -1031,9 +1031,10 @@ class Card extends React.Component {
                     width: 200,
                     cursor: "pointer",
                     border: "1px solid #D5D5D5",
+                    borderRadius: "0px",
                     boxShadow: this.state.hovering
                         ? "2px 2px 5px #777777"
-                        : "1px 1px 1px #D5D5D5",
+                        : "1px 1px 2px #D5D5D5",
                     margin: 5,
                 }}
                 onMouseEnter={this.onMouseOver}
@@ -1067,10 +1068,11 @@ class Card extends React.Component {
                     style={{
                         position: "absolute",
                         height: 200,
-                        width: 198,
+                        width: 200,
                         overflow: "hidden",
                         backgroundPosition: "center center",
                         backgroundRepeat: "no-repeat",
+                        backgroundSize: "cover",
                         backgroundImage:
                             image_id == null
                                 ? "url('test.jpg')"
@@ -1345,7 +1347,7 @@ class PlaylistSong extends React.Component {
         event.preventDefault();
     };
     onDragEnter = event => {
-        event.currentTarget.style.borderTop = "2px solid " + activeColor;
+        event.currentTarget.style.borderTop = "2px solid " + active_color;
     };
     onDragLeave = event => {
         event.currentTarget.style.borderTop = "1px solid gray";
@@ -3532,7 +3534,7 @@ class AudioApp extends React.Component {
                         onSearchClick={this.onSearchClick}
                         onTabClicked={this.onNavbarTabClicked}
                     />
-                    {subcomponent}
+                    <div style={{paddingTop: 5}}>{subcomponent}</div>
                     <div
                         style={{
                             width: "100%",
@@ -3592,12 +3594,12 @@ class AudioApp extends React.Component {
                             bottom: 15,
                             overflow: "auto",
                             pointerEvents: "auto",
-                            boxShadow: "3px 3px 10px " + activeColor,
+                            boxShadow: "1px 1px 10px " + active_color,
                             width: 700,
                             height: "calc(100% - 200px)",
                             borderRadius: 0,
                             backgroundColor: "white",
-                            border: "1px solid " + activeColor,
+                            border: "1px solid " + active_color,
                             fontSize: "0.9rem",
                         }}
                         onScroll={this.onScroll}
@@ -3678,7 +3680,7 @@ class AudioApp extends React.Component {
                             height: 0,
                             borderLeft: "10px solid transparent",
                             borderRight: "10px solid transparent",
-                            borderTop: "10px solid" + activeColor,
+                            borderTop: "10px solid" + active_color,
                         }}
                     />
                 </div>
@@ -3693,8 +3695,10 @@ class AudioApp extends React.Component {
                         minHeight: 100,
                         maxHeight: 100,
                         zIndex: 10,
+                        boxShadow: "rgb(213, 213, 213) 0px 0px 10px",
+                        backgroundColor: "white",
                     }}
-                    className="navbar navbar-expand-lg navbar-light bg-light"
+                    className="navbar navbar-expand-lg navbar-light"
                 >
                     <audio
                         id="audio"
@@ -3725,7 +3729,7 @@ class AudioApp extends React.Component {
                                         cursor: "pointer",
                                         paddingRight: 30,
                                         color: shuffle
-                                            ? activeColor
+                                            ? active_color
                                             : inactiveColor,
                                     }}
                                 >
@@ -3790,7 +3794,7 @@ class AudioApp extends React.Component {
                                         position: "relative",
                                         cursor: "pointer",
                                         paddingLeft: 30,
-                                        color: activeColor,
+                                        color: active_color,
                                     }}
                                 >
                                     repeat
@@ -3808,7 +3812,7 @@ class AudioApp extends React.Component {
                                 height: 100,
                                 width: 100,
                                 overflow: "hidden",
-                                backgroundPosition: "center center",
+                                backgroundSize: "cover",
                                 backgroundRepeat: "no-repeat",
                                 backgroundImage:
                                     image_id == null
@@ -3880,7 +3884,7 @@ class AudioApp extends React.Component {
                                 top: -50,
                                 width: "0",
                                 height: 5,
-                                backgroundColor: activeColor,
+                                backgroundColor: active_color,
                                 pointerEvents: "none",
                             }}
                         />

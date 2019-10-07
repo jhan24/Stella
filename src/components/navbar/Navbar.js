@@ -4,6 +4,7 @@ import React from "react";
 import NavbarForSelectedItems from "./NavbarForSelectedItems.js";
 import NavbarSearchForm from "./NavbarSearchForm.js";
 import NavbarTabs from "./NavbarTabs.js";
+import { active_color } from "../../index.js";
 
 import type { SearchType } from "./NavbarSearchTypeButton.js";
 import type { ChildType, EditType, Id, RouteInfo, Song } from "../../types.js";
@@ -43,13 +44,17 @@ export default class Navbar extends React.Component<Props> {
                         top: 0,
                         width: "100%",
                         zIndex: 10,
+                        boxShadow: "rgb(113, 113, 113) 0px 0px 5px",
+                        backgroundColor: "white",
                     }}
                     id="main-navbar"
-                    className="navbar navbar-expand-lg navbar-light bg-light"
+                    className="navbar navbar-expand-lg navbar-light"
                     onMouseEnter={this.onMouseEnterSearchOptions}
                     onMouseLeave={this.onMouseLeaveSearchOptions}
                 >
-                    <a className="navbar-brand">Stella</a>
+                    <a style={{ color: active_color }} className="navbar-brand">
+                        Stella
+                    </a>
                     <button
                         className="navbar-toggler"
                         type="button"

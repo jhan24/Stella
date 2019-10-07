@@ -2,8 +2,8 @@
 
 import type { Sort, SortableColumns } from "./column_types.js";
 
+// Entities
 export type Id = number;
-
 export type Song = {
     album: string,
     album_artist: string,
@@ -17,8 +17,8 @@ export type Song = {
     track_number: ?number,
 };
 
-export type ChildType = "welcome" | "album-list" | "artist-list" | "song-list";
 
+// Network and Routing
 export type RequestParams = {
     [string]: mixed,
 };
@@ -26,7 +26,6 @@ export type Request = {
     base_url: string,
     base_params: RequestParams,
 };
-
 export type RouteInfo =
     | {
           child_type: ChildType,
@@ -37,6 +36,9 @@ export type RouteInfo =
           child_sort_column: SortableColumns,
           child_total_size: number,
       }
-    | { child_type: "welcome", child_key: "welcome" };
+    | { child_type: "home", child_key: "home" };
+
+// Other
+export type ChildType = "home" | "album-list" | "artist-list" | "song-list";
 
 export type EditType = "song" | "songs" | "card";

@@ -12,8 +12,8 @@ type Props = {|
 export default class NavbarTabs extends React.Component<Props> {
     onHome = () => {
         this.props.onTabClicked("/", {
-            child_type: "welcome",
-            child_key: "welcome",
+            child_type: "home",
+            child_key: "home",
         });
     };
     onSongList = () => {
@@ -92,7 +92,7 @@ export default class NavbarTabs extends React.Component<Props> {
                     name={"Home"}
                     onClick={this.onHome}
                     selected={this.props.selected_tab}
-                    type={"welcome"}
+                    type={"home"}
                 />
                 <NavbarTab
                     id={"navbar-songs"}

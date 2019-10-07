@@ -34,6 +34,7 @@ import {
 import { getSelectedRows } from "./componentUtils.js";
 
 // React components
+import Home from "./components/home/Home.js";
 import Navbar from "./components/navbar/Navbar.js";
 
 import type {RouteInfo} from "./types.js";
@@ -204,19 +205,6 @@ const renderContextMenu = (event, type, row_type) => {
 };
 
 // REACT COMPONENTS ========================================================================================
-class WelcomeTest extends React.Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-            text: "Welcome",
-        };
-    }
-    render() {
-        const text = this.state.text;
-        return <div style={{ margin: 5 }}>{text}</div>;
-    }
-}
-
 class Song extends React.Component {
     constructor(props) {
         super(props);
@@ -2388,7 +2376,7 @@ class AudioApp extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            child_type: "welcome",
+            child_type: "home",
             child_key: null,
             child_data: null,
             child_request: null,
@@ -3135,7 +3123,7 @@ class AudioApp extends React.Component {
     updateNavigation = location => {
         if (location.pathname === "/" || location.state == null) {
             this.setState({
-                child_type: "welcome",
+                child_type: "home",
                 child_key: null,
                 child_data: null,
                 child_request: null,
@@ -3424,7 +3412,7 @@ class AudioApp extends React.Component {
                 />
             );
         } else {
-            subcomponent = <WelcomeTest />;
+            subcomponent = <Home />;
         }
 
         let edit_modal = null;

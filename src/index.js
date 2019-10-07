@@ -3535,6 +3535,7 @@ class AudioApp extends React.Component {
                 <div className="app" changed={this.state.changeCount}>
                     <Navbar
                         child_data={this.state.child_data}
+                        child_type={this.state.child_type}
                         current_playlist={this.state.current_playlist}
                         onSearchClick={this.onSearchClick}
                         addToPlaylist={this.addToPlaylist}

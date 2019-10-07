@@ -5,9 +5,13 @@ import NavbarForSelectedItems from "./NavbarForSelectedItems.js";
 import NavbarSearchForm from "./NavbarSearchForm.js";
 import NavbarTabs from "./NavbarTabs.js";
 
-import type { Id } from "../../types.js";
+import type { ChildType, Id, RouteInfo } from "../../types.js";
 
-type Props = { updateRatings: (number, Array<Id>) => void } & any;
+type Props = {
+    child_type: ChildType,
+    onTabClicked: (string, RouteInfo) => void,
+    updateRatings: (number, Array<Id>) => void,
+} & any;
 
 export default class Navbar extends React.Component<Props> {
     onMouseEnterSearchOptions = (event: SyntheticEvent<>) => {
@@ -56,8 +60,10 @@ export default class Navbar extends React.Component<Props> {
                         className="collapse navbar-collapse"
                         id="navbarSupportedContent"
                     >
-                        <NavbarTabs onTabClicked={this.props.onTabClicked} />
-
+                        <NavbarTabs
+                            onTabClicked={this.props.onTabClicked}
+                            selected_tab={this.props.child_type}
+                        />
                         <NavbarSearchForm onSubmit={this.props.onSearchClick} />
                     </div>
                 </nav>

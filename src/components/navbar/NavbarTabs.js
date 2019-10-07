@@ -2,12 +2,14 @@
 
 import React from "react";
 import { removeActiveNavbar } from "../../utils.js";
-import type { RouteInfo } from "../../types.js";
+import type { ChildType, RouteInfo } from "../../types.js";
 
-type Props = {| onTabClicked: (string, RouteInfo) => void |};
+type Props = {|
+    onTabClicked: (string, RouteInfo) => void,
+    selected_tab: ChildType,
+|};
 
 export default class NavbarTabs extends React.Component<Props> {
-    updateTabState = () => {};
     onHome = () => {
         this.props.onTabClicked("/", {
             child_type: "welcome",
@@ -28,10 +30,6 @@ export default class NavbarTabs extends React.Component<Props> {
             child_total_size: -1,
         });
         removeActiveNavbar();
-        const tab = document.getElementById("navbar-songs");
-        if (tab != null) {
-            tab.classList.add("active");
-        }
     };
     onArtistList = () => {
         let request = {};
@@ -47,10 +45,6 @@ export default class NavbarTabs extends React.Component<Props> {
             child_total_size: -1,
         });
         removeActiveNavbar();
-        const tab = document.getElementById("navbar-artists");
-        if (tab != null) {
-            tab.classList.add("active");
-        }
     };
     onAlbumList = () => {
         let request = {};
@@ -66,10 +60,6 @@ export default class NavbarTabs extends React.Component<Props> {
             child_total_size: -1,
         });
         removeActiveNavbar();
-        const tab = document.getElementById("navbar-albums");
-        if (tab != null) {
-            tab.classList.add("active");
-        }
     };
     onAdvancedSearch = () => {
         // TODO: after refactoring search modal, use state instead of class
@@ -97,38 +87,68 @@ export default class NavbarTabs extends React.Component<Props> {
     render() {
         return (
             <ul className="navbar-nav mr-auto">
-                <li
-                    id="navbar-home"
-                    className="nav-item active main-navbar-item"
-                >
-                    <a onClick={this.onHome} className="nav-link">
-                        Home
-                    </a>
-                </li>
-                <li id="navbar-songs" className="nav-item main-navbar-item">
-                    <a onClick={this.onSongList} className="nav-link">
-                        Songs
-                    </a>
-                </li>
-                <li id="navbar-artists" className="nav-item main-navbar-item">
-                    <a onClick={this.onArtistList} className="nav-link">
-                        Artists
-                    </a>
-                </li>
-                <li id="navbar-albums" className="nav-item main-navbar-item">
-                    <a onClick={this.onAlbumList} className="nav-link">
-                        Albums
-                    </a>
-                </li>
-                <li
-                    id="navbar-advanced-search"
-                    className="nav-item main-navbar-item"
-                >
-                    <a onClick={this.onAdvancedSearch} className="nav-link">
-                        Advanced Search
-                    </a>
-                </li>
+                <NavbarTab
+                    id={"navbar-home"}
+                    name={"Home"}
+                    onClick={this.onHome}
+                    selected={this.props.selected_tab}
+                    type={"welcome"}
+                />
+                <NavbarTab
+                    id={"navbar-songs"}
+                    name={"Songs"}
+                    onClick={this.onSongList}
+                    selected={this.props.selected_tab}
+                    type={"song-list"}
+                />
+                <NavbarTab
+                    id={"navbar-artists"}
+                    name={"Artists"}
+                    onClick={this.onArtistList}
+                    selected={this.props.selected_tab}
+                    type={"artist-list"}
+                />
+                <NavbarTab
+                    id={"navbar-albums"}
+                    name={"Albums"}
+                    onClick={this.onAlbumList}
+                    selected={this.props.selected_tab}
+                    type={"album-list"}
+                />
+                <NavbarTab
+                    id={"navbar-advanced-search"}
+                    name={"Advanced Search"}
+                    onClick={this.onAdvancedSearch}
+                    selected={this.props.selected_tab}
+                    type={null}
+                />
             </ul>
+        );
+    }
+}
+
+type TabProps = {|
+    id: string,
+    name: string,
+    onClick: () => void,
+    selected: ChildType,
+    type: ?ChildType,
+|};
+class NavbarTab extends React.Component<TabProps> {
+    onClick = () => {
+        this.props.onClick();
+    };
+    render() {
+        const active = this.props.type === this.props.selected ? "active" : "";
+        return (
+            <li
+                id={this.props.id}
+                className={"nav-item main-navbar-item " + active}
+            >
+                <a onClick={this.onClick} className="nav-link">
+                    {this.props.name}
+                </a>
+            </li>
         );
     }
 }

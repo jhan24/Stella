@@ -45,10 +45,7 @@ export default class NavbarSearchForm extends React.Component<Props, State> {
             );
         });
         return (
-            <form
-                className="form-inline my-2 my-lg-0"
-                onSubmit={this.onSubmit}
-            >
+            <form className="form-inline my-2 my-lg-0" onSubmit={this.onSubmit}>
                 <div
                     id="search-button-group"
                     className="btn-group btn-group-toggle"
@@ -57,22 +54,26 @@ export default class NavbarSearchForm extends React.Component<Props, State> {
                 >
                     {search_buttons}
                 </div>
-                <input
-                    id="generic-search-input"
-                    className="form-control mr-sm-2"
-                    type="search"
-                    placeholder="Search"
-                    autoComplete="off"
-                    aria-label="Search"
-                    value={this.state.search}
-                    onChange={this.onTextChange}
-                />
-                <button
-                    className="btn btn-outline-success my-2 my-sm-0"
-                    type="submit"
-                >
-                    Search
-                </button>
+                <div style={{ padding: 0, height: "70%" }}>
+                    <input
+                        id="generic-search-input"
+                        className="form-control"
+                        type="search"
+                        placeholder="Search"
+                        autoComplete="off"
+                        aria-label="Search"
+                        value={this.state.search}
+                        onChange={this.onTextChange}
+                        style={{ borderRadius: 0, marginLeft: 5 }}
+                    />
+                    <button
+                        style={{ borderRadius: 0, paddingTop: 3, paddingBottom: 3, paddingLeft: 6, paddingRight: 6}}
+                        className="btn btn-outline-success my-2 my-sm-0"
+                        type="submit"
+                    >
+                        <i className="material-icons" style={{position: "relative", top: 3}}>search</i>
+                    </button>
+                </div>
             </form>
         );
     }

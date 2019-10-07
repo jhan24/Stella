@@ -4,6 +4,7 @@
  * 1. Preload songs (and strip them of metadata on back-end side)
  * 2. Allow advanced search results to be displayed as Albums/Artists
  *    (and add order by for albums, strict_artist for artist)
+ * 3. Loading states + optimistic tab selection
  *
  * Refactor/make code more efficient and readable overall
  *
@@ -23,7 +24,7 @@ import {
     editable_columns,
     propagating_columns,
     searchable_columns,
-} from "./types.js";
+} from "./column_types.js";
 import {
     formatTime,
     getNextIndex,

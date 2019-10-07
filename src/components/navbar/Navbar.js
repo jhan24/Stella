@@ -5,13 +5,19 @@ import NavbarForSelectedItems from "./NavbarForSelectedItems.js";
 import NavbarSearchForm from "./NavbarSearchForm.js";
 import NavbarTabs from "./NavbarTabs.js";
 
-import type { ChildType, Id, RouteInfo } from "../../types.js";
+import type { SearchType } from "./NavbarSearchTypeButton.js";
+import type { ChildType, EditType, Id, RouteInfo, Song } from "../../types.js";
 
-type Props = {
+type Props = {|
+    child_data: any,
     child_type: ChildType,
+    current_playlist: Array<Song>,
+    onAddToPlaylist: (Array<Song>, number) => void,
+    onEditInfo: (EditType, Array<Song>) => void,
+    onSearchClick: (string, SearchType) => void,
     onTabClicked: (string, RouteInfo) => void,
-    updateRatings: (number, Array<Id>) => void,
-} & any;
+    onUpdateRatings: (number, Array<Id>) => void,
+|};
 
 export default class Navbar extends React.Component<Props> {
     onMouseEnterSearchOptions = (event: SyntheticEvent<>) => {
@@ -71,9 +77,9 @@ export default class Navbar extends React.Component<Props> {
                 <NavbarForSelectedItems
                     child_data={this.props.child_data}
                     current_playlist={this.props.current_playlist}
-                    onAddToPlaylist={this.props.addToPlaylist}
-                    onEditInfo={this.props.editInfo}
-                    onUpdateRatings={this.props.updateRatings}
+                    onAddToPlaylist={this.props.onAddToPlaylist}
+                    onEditInfo={this.props.onEditInfo}
+                    onUpdateRatings={this.props.onUpdateRatings}
                 />
             </div>
         );

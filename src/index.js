@@ -3537,10 +3537,10 @@ class AudioApp extends React.Component {
                         child_data={this.state.child_data}
                         child_type={this.state.child_type}
                         current_playlist={this.state.current_playlist}
+                        onAddToPlaylist={this.addToPlaylist}
+                        onEditInfo={this.editInfo}
+                        onUpdateRatings={this.updateRatings}
                         onSearchClick={this.onSearchClick}
-                        addToPlaylist={this.addToPlaylist}
-                        updateRatings={this.updateRatings}
-                        editInfo={this.editInfo}
                         onTabClicked={this.onNavbarTabClicked}
                     />
                     {subcomponent}

@@ -6,7 +6,6 @@ import NavbarSearchTypeButton, {
 } from "./NavbarSearchTypeButton.js";
 
 import type { SearchType } from "./NavbarSearchTypeButton.js";
-import type { Id } from "../../types.js";
 
 type Props = {| onSubmit: (string, SearchType) => void |};
 type State = {| search: string, selected_id: SearchType |};

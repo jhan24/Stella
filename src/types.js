@@ -15,6 +15,40 @@ export type Song = {
     track_number: ?number,
 };
 
+export type ChildType = "welcome" | "album-list" | "artist-list" | "song-list";
+
+export type Sort = "ASC" | "DESC";
+export type SortableColumns =
+    | "album"
+    | "album_artist"
+    | "artist"
+    | "disc_number"
+    | "length"
+    | "play_count"
+    | "rating"
+    | "title"
+    | "track_number";
+
+export type RequestParams = {
+    [string]: mixed,
+};
+export type Request = {
+    base_url: string,
+    base_params: RequestParams,
+};
+
+export type RouteInfo =
+    | {
+          child_type: ChildType,
+          child_key: ChildType,
+          child_request: Request,
+          child_page: number,
+          child_sort_type: Sort,
+          child_sort_column: SortableColumns,
+          child_total_size: number,
+      }
+    | { child_type: "welcome", child_key: "welcome" };
+
 export type EditType = "song" | "songs" | "card";
 
 export type ColumnObject = {

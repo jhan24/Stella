@@ -35,6 +35,8 @@ import { getSelectedRows } from "./componentUtils.js";
 // React components
 import Navbar from "./components/navbar/Navbar.js";
 
+import type {RouteInfo} from "./types.js";
+
 let playlistCount = 0;
 let playlistTicking = false;
 
@@ -2671,22 +2673,6 @@ class AudioApp extends React.Component {
         }
     };
 
-    songList = event => {
-        let request = {};
-        request["base_url"] = "/api/search/songs";
-        request["base_params"] = {};
-        this.props.history.push("/songs", {
-            child_type: "song-list",
-            child_key: "song-list",
-            child_request: request,
-            child_page: 0,
-            child_sort_type: "ASC",
-            child_sort_column: "title",
-            child_total_size: -1,
-        });
-        removeActiveNavbar();
-        document.getElementById("navbar-songs").classList.add("active");
-    };
     // makes a call for the search results (including the total number of results) to pass to the song list
     onSearchClick = (search, type) => {
         let child_type = "song-list";
@@ -3054,25 +3040,9 @@ class AudioApp extends React.Component {
             });
         }
     };
-    welcomeScreen = () => {
-        this.props.history.push("/");
-    };
-    albumList = () => {
-        let request = {};
-        request["base_url"] = "/api/search/songs";
-        request["base_params"] = { results: "album" };
-        this.props.history.push("/albums", {
-            child_type: "album-list",
-            child_key: "album-list",
-            child_request: request,
-            child_page: 0,
-            child_sort_type: "ASC",
-            child_sort_column: "album",
-            child_total_size: -1,
-        });
-        removeActiveNavbar();
-        document.getElementById("navbar-albums").classList.add("active");
-    };
+    onNavbarTabClicked = (path: string, routeInfo: RouteInfo) => {
+        this.props.history.push(path, routeInfo);
+    }
     albumClick = (album, album_artist) => {
         let request = {};
         request["base_url"] = "/api/search/songs";
@@ -3160,22 +3130,6 @@ class AudioApp extends React.Component {
             artist_detail: 1,
         });
         removeActiveNavbar();
-    };
-    artistList = () => {
-        let request = {};
-        request["base_url"] = "/api/search/songs";
-        request["base_params"] = { results: "artist" };
-        this.props.history.push("/artists", {
-            child_type: "artist-list",
-            child_key: "artist-list",
-            child_request: request,
-            child_page: 0,
-            child_sort_type: "ASC",
-            child_sort_column: "album_artist",
-            child_total_size: -1,
-        });
-        removeActiveNavbar();
-        document.getElementById("navbar-artists").classList.add("active");
     };
     updateNavigation = location => {
         if (location.pathname === "/" || location.state == null) {
@@ -3286,16 +3240,6 @@ class AudioApp extends React.Component {
                     });
             }
         }
-    };
-    openSearchModal = event => {
-        document.getElementById("modal-cover").classList.add("modal-active");
-        document.getElementById(
-            "advanced-search-modal-content"
-        ).style.visibility = "visible";
-        document
-            .getElementById("advanced-search-modal-content")
-            .classList.add("modal-active");
-        document.getElementById("advanced-search-submit").disabled = false;
     };
     closeModals = event => {
         if (
@@ -3595,12 +3539,8 @@ class AudioApp extends React.Component {
                         onSearchClick={this.onSearchClick}
                         addToPlaylist={this.addToPlaylist}
                         updateRatings={this.updateRatings}
-                        welcomeScreen={this.welcomeScreen}
-                        albumList={this.albumList}
-                        songList={this.songList}
-                        artistList={this.artistList}
-                        openSearchModal={this.openSearchModal}
                         editInfo={this.editInfo}
+                        onTabClicked={this.onNavbarTabClicked}
                     />
                     {subcomponent}
                     <div

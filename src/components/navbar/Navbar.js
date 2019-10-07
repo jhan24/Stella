@@ -1,13 +1,10 @@
 // @flow
 
 import React from "react";
-import NavbarSearchTypeButton, {
-    search_type,
-} from "./NavbarSearchTypeButton.js";
 import NavbarForSelectedItems from "./NavbarForSelectedItems.js";
 import NavbarSearchForm from "./NavbarSearchForm.js";
+import NavbarTabs from "./NavbarTabs.js";
 
-import type { SearchType } from "./NavbarSearchTypeButton.js";
 import type { Id } from "../../types.js";
 
 type Props = { updateRatings: (number, Array<Id>) => void } & any;
@@ -59,63 +56,7 @@ export default class Navbar extends React.Component<Props> {
                         className="collapse navbar-collapse"
                         id="navbarSupportedContent"
                     >
-                        <ul className="navbar-nav mr-auto">
-                            <li
-                                id="navbar-home"
-                                className="nav-item active main-navbar-item"
-                            >
-                                <a
-                                    onClick={this.props.welcomeScreen}
-                                    className="nav-link"
-                                >
-                                    Home
-                                </a>
-                            </li>
-                            <li
-                                id="navbar-songs"
-                                className="nav-item main-navbar-item"
-                            >
-                                <a
-                                    onClick={this.props.songList}
-                                    className="nav-link"
-                                >
-                                    Songs
-                                </a>
-                            </li>
-                            <li
-                                id="navbar-artists"
-                                className="nav-item main-navbar-item"
-                            >
-                                <a
-                                    onClick={this.props.artistList}
-                                    className="nav-link"
-                                >
-                                    Artists
-                                </a>
-                            </li>
-                            <li
-                                id="navbar-albums"
-                                className="nav-item main-navbar-item"
-                            >
-                                <a
-                                    onClick={this.props.albumList}
-                                    className="nav-link"
-                                >
-                                    Albums
-                                </a>
-                            </li>
-                            <li
-                                id="navbar-advanced-search"
-                                className="nav-item main-navbar-item"
-                            >
-                                <a
-                                    onClick={this.props.openSearchModal}
-                                    className="nav-link"
-                                >
-                                    Advanced Search
-                                </a>
-                            </li>
-                        </ul>
+                        <NavbarTabs onTabClicked={this.props.onTabClicked} />
 
                         <NavbarSearchForm onSubmit={this.props.onSearchClick} />
                     </div>

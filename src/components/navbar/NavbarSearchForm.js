@@ -34,7 +34,7 @@ export default class NavbarSearchForm extends React.Component<Props, State> {
     };
 
     render() {
-        const search_buttons = Object.keys(search_type).map(type => {
+        const search_buttons = Object.keys(search_type).map((type) => {
             return (
                 <NavbarSearchTypeButton
                     key={type}
@@ -67,11 +67,22 @@ export default class NavbarSearchForm extends React.Component<Props, State> {
                         style={{ borderRadius: 0, marginLeft: 5 }}
                     />
                     <button
-                        style={{ borderRadius: 0, paddingTop: 3, paddingBottom: 3, paddingLeft: 6, paddingRight: 6}}
+                        style={{
+                            borderRadius: 0,
+                            paddingTop: 3,
+                            paddingBottom: 3,
+                            paddingLeft: 6,
+                            paddingRight: 6,
+                        }}
                         className="btn btn-outline-success my-2 my-sm-0"
                         type="submit"
                     >
-                        <i className="material-icons" style={{position: "relative", top: 3}}>search</i>
+                        <i
+                            className="material-icons"
+                            style={{ position: "relative", top: 3 }}
+                        >
+                            search
+                        </i>
                     </button>
                 </div>
             </form>

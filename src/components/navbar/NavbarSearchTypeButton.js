@@ -14,14 +14,14 @@ export type SearchType = $Keys<typeof search_type>;
 type Props = {|
     +active_type: SearchType,
     +type: SearchType,
-    +onClick: SearchType => void,
+    +onClick: (SearchType) => void,
 |};
 
 export default class NavbarSearchTypeButton extends React.Component<Props> {
     onClick = (_event: SyntheticEvent<>): void => {
         this.props.onClick(this.props.type);
     };
-    
+
     render() {
         const { active_type, type } = this.props;
         const active_class = active_type === type ? "active" : "";

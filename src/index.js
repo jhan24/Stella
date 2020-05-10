@@ -31,13 +31,13 @@ import {
     removeActiveNavbar,
     shuffle,
 } from "./utils.js";
-import { getSelectedRows } from "./componentUtils.js";
+import { getSelectedSongs } from "./componentUtils.js";
 
 // React components
 import Home from "./components/home/Home.js";
 import Navbar from "./components/navbar/Navbar.js";
 
-import type {RouteInfo} from "./types.js";
+import type { RouteInfo } from "./types.js";
 
 let playlistCount = 0;
 let playlistTicking = false;
@@ -213,37 +213,37 @@ class Song extends React.Component {
         };
     }
 
-    onMouseOver = event => {
+    onMouseOver = (event) => {
         this.setState({ hovering: true });
     };
-    onMouseOut = event => {
+    onMouseOut = (event) => {
         this.setState({ hovering: false });
     };
-    onPlayClick = event => {
+    onPlayClick = (event) => {
         this.props.onSongPlay(this.props.position);
     };
-    addNext = event => {
+    addNext = (event) => {
         this.props.addToPlaylist([this.props.song_info], 1);
     };
-    addQueue = event => {
+    addQueue = (event) => {
         this.props.addToPlaylist([this.props.song_info], 0);
     };
-    editInfo = event => {
+    editInfo = (event) => {
         this.props.editInfo("song", [this.props.song_info]);
     };
-    showMenu = event => {
+    showMenu = (event) => {
         showSongDropdown(
             event,
             "song-dropdown-menu-" + this.props.song_info.id
         );
     };
-    onClick = event => {
+    onClick = (event) => {
         tableRowSelect(event, "song-table", "song-row");
     };
-    updateRating = new_rating => event => {
+    updateRating = (new_rating) => (event) => {
         this.props.updateRatings(new_rating, [this.props.song_info.id]);
     };
-    onAlbumLink = event => {
+    onAlbumLink = (event) => {
         if (this.props.album_view !== true) {
             this.props.albumClick(
                 this.props.song_info.album,
@@ -251,7 +251,7 @@ class Song extends React.Component {
             );
         }
     };
-    onArtistLink = event => {
+    onArtistLink = (event) => {
         this.props.artistClick(this.props.song_info.artist);
     };
     render() {
@@ -396,10 +396,10 @@ class Song extends React.Component {
 }
 
 class AlbumDescription extends React.Component {
-    artistClick = event => {
+    artistClick = (event) => {
         this.props.artistClick(this.props.song.album_artist);
     };
-    openImage = event => {
+    openImage = (event) => {
         if (this.props.song.image_id != null) {
             window.open(
                 axios.defaults.baseURL +
@@ -509,7 +509,7 @@ class AlbumDescription extends React.Component {
 }
 
 class SongList extends React.Component {
-    onSongPlay = position => {
+    onSongPlay = (position) => {
         this.props.generatePlaylist(
             position,
             this.props.page,
@@ -518,16 +518,16 @@ class SongList extends React.Component {
             this.props.data.data
         );
     };
-    addNext = event => {
-        this.props.addToPlaylist(getSelectedRows(this.props.data.data), 1);
+    addNext = (event) => {
+        this.props.addToPlaylist(getSelectedSongs(this.props.data.data), 1);
     };
-    addQueue = event => {
-        this.props.addToPlaylist(getSelectedRows(this.props.data.data), 0);
+    addQueue = (event) => {
+        this.props.addToPlaylist(getSelectedSongs(this.props.data.data), 0);
     };
-    editInfo = event => {
-        this.props.editInfo("song", getSelectedRows(this.props.data.data));
+    editInfo = (event) => {
+        this.props.editInfo("song", getSelectedSongs(this.props.data.data));
     };
-    addAllToPlaylist = method => event => {
+    addAllToPlaylist = (method) => (event) => {
         if (
             this.props.total_size > pageLength &&
             this.props.data.data.length > 0
@@ -537,17 +537,17 @@ class SongList extends React.Component {
             this.props.addToPlaylist(this.props.data.data, method);
         }
     };
-    editAllInfo = event => {
+    editAllInfo = (event) => {
         this.props.editInfo("songs", null);
     };
-    onContextMenu = event => {
+    onContextMenu = (event) => {
         event.preventDefault();
         renderContextMenu(event, "song", "song-row");
     };
     updateRatings = (new_rating, ids) => {
         this.props.updateRatings(new_rating, ids);
     };
-    showMenu = event => {
+    showMenu = (event) => {
         showSongDropdown(event, "full-dropdown-menu");
     };
     render() {
@@ -834,13 +834,13 @@ class Card extends React.Component {
         };
     }
 
-    onMouseOver = event => {
+    onMouseOver = (event) => {
         this.setState({ hovering: true });
     };
-    onMouseOut = event => {
+    onMouseOut = (event) => {
         this.setState({ hovering: false });
     };
-    onContextMenu = event => {
+    onContextMenu = (event) => {
         event.preventDefault();
         showSongDropdown(
             event,
@@ -850,7 +850,7 @@ class Card extends React.Component {
             "fixed"
         );
     };
-    showMenu = event => {
+    showMenu = (event) => {
         event.stopPropagation();
         showSongDropdown(
             event,
@@ -860,7 +860,7 @@ class Card extends React.Component {
             "absolute"
         );
     };
-    addToPlaylist = type => event => {
+    addToPlaylist = (type) => (event) => {
         event.stopPropagation();
         removeDropdowns();
 
@@ -876,10 +876,10 @@ class Card extends React.Component {
                         order_by: "album",
                     },
                 })
-                .then(response => {
+                .then((response) => {
                     this.props.addToPlaylist(response.data.data, type);
                 })
-                .catch(function(error) {
+                .catch(function (error) {
                     console.log(error);
                 });
         } else {
@@ -896,15 +896,15 @@ class Card extends React.Component {
                         order_by: "album_artist",
                     },
                 })
-                .then(response => {
+                .then((response) => {
                     this.props.addToPlaylist(response.data.data, type);
                 })
-                .catch(function(error) {
+                .catch(function (error) {
                     console.log(error);
                 });
         }
     };
-    editInfo = event => {
+    editInfo = (event) => {
         event.stopPropagation();
         removeDropdowns();
         if (this.props.albums === true) {
@@ -923,7 +923,7 @@ class Card extends React.Component {
             });
         }
     };
-    cardClick = event => {
+    cardClick = (event) => {
         if (this.props.albums === true) {
             this.props.albumClick(
                 this.props.info.album,
@@ -934,7 +934,7 @@ class Card extends React.Component {
         }
     };
 
-    artistLabelClick = event => {
+    artistLabelClick = (event) => {
         event.stopPropagation();
         this.props.artistClick(this.props.info.album_artist);
     };
@@ -1030,11 +1030,11 @@ class Card extends React.Component {
                     height: 250,
                     width: 200,
                     cursor: "pointer",
-                    border: "1px solid #D5D5D5",
+                    border: "0px solid #D5D5D5",
                     borderRadius: "0px",
                     boxShadow: this.state.hovering
-                        ? "2px 2px 5px #777777"
-                        : "1px 1px 2px #D5D5D5",
+                        ? "2px 2px 5px #666666"
+                        : "0px 1px 3px #BBBBBB",
                     margin: 5,
                 }}
                 onMouseEnter={this.onMouseOver}
@@ -1090,12 +1090,12 @@ class Card extends React.Component {
 }
 
 class ArtistDescription extends React.Component {
-    artistSongs = event => {
+    artistSongs = (event) => {
         if (this.props.albums === true) {
             this.props.artistSongs(this.props.artistDetails.artist);
         }
     };
-    openImage = event => {
+    openImage = (event) => {
         if (this.props.artistDetails.image_id != null) {
             window.open(
                 axios.defaults.baseURL +
@@ -1284,14 +1284,14 @@ class PlaylistSong extends React.Component {
             hovering: false,
         };
     }
-    onPlayClick = event => {
+    onPlayClick = (event) => {
         let position =
             document.getElementById(
                 "playlist-song-item-" + this.props.song_info.playlist_id
             ).rowIndex - 1;
         this.props.changeCurrentIndex(position);
     };
-    onMouseOver = event => {
+    onMouseOver = (event) => {
         if (
             !document
                 .getElementById("playlist-table")
@@ -1300,7 +1300,7 @@ class PlaylistSong extends React.Component {
             this.setState({ hovering: true });
         }
     };
-    onMouseOut = event => {
+    onMouseOut = (event) => {
         if (
             !document
                 .getElementById("playlist-table")
@@ -1309,16 +1309,16 @@ class PlaylistSong extends React.Component {
             this.setState({ hovering: false });
         }
     };
-    addNext = event => {
+    addNext = (event) => {
         this.props.addToPlaylist([this.props.song_info], 1);
     };
-    addQueue = event => {
+    addQueue = (event) => {
         this.props.addToPlaylist([this.props.song_info], 0);
     };
-    editInfo = event => {
+    editInfo = (event) => {
         this.props.editInfo("song", [this.props.song_info]);
     };
-    onDragStart = event => {
+    onDragStart = (event) => {
         let position = event.currentTarget.rowIndex - 1;
         event.dataTransfer.setData("text/plain", position);
         document.getElementById("playlist-table").classList.add("dragging");
@@ -1339,20 +1339,20 @@ class PlaylistSong extends React.Component {
         selected_navbar.style.pointerEvents = "none";
         selected_navbar.style.opacity = 0;
     };
-    onDragEnd = event => {
+    onDragEnd = (event) => {
         document.getElementById("playlist-table").classList.remove("dragging");
     };
     // drag and drop events to allow reordering of playlist
-    allowDrop = event => {
+    allowDrop = (event) => {
         event.preventDefault();
     };
-    onDragEnter = event => {
+    onDragEnter = (event) => {
         event.currentTarget.style.borderTop = "2px solid " + active_color;
     };
-    onDragLeave = event => {
+    onDragLeave = (event) => {
         event.currentTarget.style.borderTop = "1px solid gray";
     };
-    onDrop = event => {
+    onDrop = (event) => {
         event.preventDefault();
         event.currentTarget.style.borderTop = "1px solid gray";
         let new_position = event.currentTarget.rowIndex - 1;
@@ -1363,25 +1363,25 @@ class PlaylistSong extends React.Component {
         }
         this.props.onDrop(new_position, list);
     };
-    showMenu = event => {
+    showMenu = (event) => {
         showSongDropdown(
             event,
             "playlist-dropdown-menu-" + this.props.song_info.playlist_id
         );
     };
-    onClick = event => {
+    onClick = (event) => {
         tableRowSelect(event, "playlist-table", "playlist-row");
     };
-    updateRating = new_rating => event => {
+    updateRating = (new_rating) => (event) => {
         this.props.updateRatings(new_rating, [this.props.song_info.id]);
     };
-    albumClick = event => {
+    albumClick = (event) => {
         this.props.albumClick(
             this.props.song_info.album,
             this.props.song_info.album_artist
         );
     };
-    artistClick = event => {
+    artistClick = (event) => {
         this.props.artistClick(this.props.song_info.artist);
     };
     render() {
@@ -1568,7 +1568,7 @@ class SearchFormRow extends React.Component {
         super(props);
         this.state = {};
     }
-    operatorChange = type => event => {
+    operatorChange = (type) => (event) => {
         this.props.updateFilter(
             this.props.data["col"],
             this.props.data["value1"],
@@ -1577,7 +1577,7 @@ class SearchFormRow extends React.Component {
             this.props.index
         );
     };
-    valueChange1 = event => {
+    valueChange1 = (event) => {
         this.props.updateFilter(
             this.props.data["col"],
             event.target.value,
@@ -1586,7 +1586,7 @@ class SearchFormRow extends React.Component {
             this.props.index
         );
     };
-    valueChange2 = event => {
+    valueChange2 = (event) => {
         this.props.updateFilter(
             this.props.data["col"],
             this.props.data["value1"],
@@ -1595,7 +1595,7 @@ class SearchFormRow extends React.Component {
             this.props.index
         );
     };
-    uploadFile = event => {
+    uploadFile = (event) => {
         this.props.updateFilter(
             this.props.data["col"],
             event.target.files,
@@ -1844,7 +1844,7 @@ class EditModal extends React.Component {
                     : ">50",
         };
     }
-    handleSubmit = event => {
+    handleSubmit = (event) => {
         event.preventDefault();
         document.getElementById("edit-save").disabled = true;
         let editParams = new FormData();
@@ -1888,14 +1888,14 @@ class EditModal extends React.Component {
             .post("/api/songs", editParams, {
                 params: this.props.edit_info,
             })
-            .then(response => {
+            .then((response) => {
                 this.props.onEditSuccess(propagating_changes, response);
             })
-            .catch(function(error) {
+            .catch(function (error) {
                 console.log(error);
             });
     };
-    addFilter = type => event => {
+    addFilter = (type) => (event) => {
         let data = this.state.data;
         let value = "";
         if (this.props.edit_data.length <= 50) {
@@ -1931,7 +1931,7 @@ class EditModal extends React.Component {
         data[index]["op"] = op;
         this.setState({ data: data });
     };
-    removeFilter = index => event => {
+    removeFilter = (index) => (event) => {
         let data = this.state.data;
         data.splice(index, 1);
         this.setState({ data: data });
@@ -1939,7 +1939,7 @@ class EditModal extends React.Component {
     componentDidMount() {
         document.getElementById("edit-modal-loading").style.display = "none";
     }
-    openImage = event => {
+    openImage = (event) => {
         window.open(
             axios.defaults.baseURL +
                 "/api/song/" +
@@ -2092,7 +2092,7 @@ class SearchModal extends React.Component {
             publisher_grouped: false,
         };
     }
-    onCheck = type => event => {
+    onCheck = (type) => (event) => {
         if (type === 0) {
             this.setState({ alt_specific: !this.state.alt_specific });
         } else if (type === 1) {
@@ -2105,7 +2105,7 @@ class SearchModal extends React.Component {
             this.setState({ publisher_grouped: !this.state.publisher_grouped });
         }
     };
-    addFilter = type => event => {
+    addFilter = (type) => (event) => {
         let data = this.state.data;
         data.push({
             col: type,
@@ -2123,13 +2123,13 @@ class SearchModal extends React.Component {
         data[index]["op"] = op;
         this.setState({ data: data });
     };
-    removeFilter = index => event => {
+    removeFilter = (index) => (event) => {
         console.log(index);
         let data = this.state.data;
         data.splice(index, 1);
         this.setState({ data: data });
     };
-    handleSubmit = event => {
+    handleSubmit = (event) => {
         event.preventDefault();
         removeActiveNavbar();
         document.getElementById("advanced-search-submit").disabled = true;
@@ -2429,14 +2429,14 @@ class AudioApp extends React.Component {
                     .get(requestNew["base_url"], {
                         params: requestNew["base_params"],
                     })
-                    .then(response => {
+                    .then((response) => {
                         if (this.state.shuffle === true) {
                             response.data.data.unshift(data[index_position]);
                             position = 0;
                         }
                         this.setPlaylist(response.data.data, position);
                     })
-                    .catch(function(error) {
+                    .catch(function (error) {
                         console.log(error);
                     });
             } else {
@@ -2482,7 +2482,7 @@ class AudioApp extends React.Component {
                                 this.setPlaylist(playlist, 0);
                             })
                         )
-                        .catch(function(error) {
+                        .catch(function (error) {
                             console.log(error);
                         });
                 } else {
@@ -2506,7 +2506,7 @@ class AudioApp extends React.Component {
                         .get(requestNew["base_url"], {
                             params: requestNew["base_params"],
                         })
-                        .then(response => {
+                        .then((response) => {
                             if (this.state.shuffle === true) {
                                 response.data.data.unshift(
                                     JSON.parse(
@@ -2516,7 +2516,7 @@ class AudioApp extends React.Component {
                             }
                             this.setPlaylist(response.data.data, 0);
                         })
-                        .catch(function(error) {
+                        .catch(function (error) {
                             console.log(error);
                         });
                 }
@@ -2550,14 +2550,14 @@ class AudioApp extends React.Component {
         );
     };
 
-    addNext = event => {
-        this.addToPlaylist(getSelectedRows(this.state.current_playlist), 1);
+    addNext = (event) => {
+        this.addToPlaylist(getSelectedSongs(this.state.current_playlist), 1);
     };
-    addQueue = event => {
-        this.addToPlaylist(getSelectedRows(this.state.current_playlist), 0);
+    addQueue = (event) => {
+        this.addToPlaylist(getSelectedSongs(this.state.current_playlist), 0);
     };
-    getPlaylistEditData = event => {
-        this.editInfo("song", getSelectedRows(this.state.current_playlist));
+    getPlaylistEditData = (event) => {
+        this.editInfo("song", getSelectedSongs(this.state.current_playlist));
     };
     addToPlaylist = (data, next) => {
         // TODO: maybe try to make more efficient? it is pretty fast already though
@@ -2619,7 +2619,7 @@ class AudioApp extends React.Component {
             next_id: getNextIndex(new_playlist, current_index),
         });
     };
-    addAllToPlaylist = method => {
+    addAllToPlaylist = (method) => {
         let request = JSON.parse(JSON.stringify(this.state.child_request));
         request["base_params"]["first_result"] = 0;
         request["base_params"]["max_results"] = maxPlaylistSize;
@@ -2630,10 +2630,10 @@ class AudioApp extends React.Component {
             .get(request["base_url"], {
                 params: request["base_params"],
             })
-            .then(response => {
+            .then((response) => {
                 this.addToPlaylist(response.data.data, method);
             })
-            .catch(function(error) {
+            .catch(function (error) {
                 console.log(error);
             });
     };
@@ -2672,18 +2672,18 @@ class AudioApp extends React.Component {
         request["base_url"] = "/api/search/songs";
         request["base_params"] = {};
 
-        if (type === 'song') {
+        if (type === "song") {
             child_type = "song-list";
             request["base_params"]["results"] = "song";
             request["base_params"]["search"] = search;
             sort = "title";
-        } else if (type === 'album') {
+        } else if (type === "album") {
             child_type = "album-list";
             request["base_params"]["results"] = "album";
             request["base_params"]["specific"] = 1;
             request["base_params"]["album"] = "LK:::" + search;
             sort = "album";
-        } else if (type === 'album_artist') {
+        } else if (type === "album_artist") {
             child_type = "artist-list";
             request["base_params"]["results"] = "artist";
             request["base_params"]["specific"] = 1;
@@ -2712,7 +2712,7 @@ class AudioApp extends React.Component {
         });
         removeActiveNavbar();
     };
-    onPageUpdate = (new_page, force) => e => {
+    onPageUpdate = (new_page, force) => (e) => {
         // makes a request to get the results of the selected page of the child element
         // only update if the page clicked is a new page (not the current)
         if (new_page !== this.state.child_page || force === true) {
@@ -2728,7 +2728,7 @@ class AudioApp extends React.Component {
             });
         }
     };
-    onSort = sort_column => e => {
+    onSort = (sort_column) => (e) => {
         let sort_type = this.state.child_sort_type;
 
         if (sort_column === this.state.child_sort_column) {
@@ -2850,7 +2850,7 @@ class AudioApp extends React.Component {
                         "/played",
                     {}
                 )
-                .catch(function(error) {
+                .catch(function (error) {
                     console.log(error);
                 });
             let playlist = this.state.current_playlist;
@@ -2874,7 +2874,7 @@ class AudioApp extends React.Component {
     };
 
     // seek-bar updating
-    timeUpdate = event => {
+    timeUpdate = (event) => {
         let audio = document.getElementById(this.state.active_audio);
         let progress = document.getElementById("audio-seeker-progress");
         let playPercent =
@@ -2885,7 +2885,7 @@ class AudioApp extends React.Component {
         progress.style.width = "calc((100% - 69px) *" + playPercent + ")";
     };
     // jump to song position when user clicks on the seekbar
-    seek = event => {
+    seek = (event) => {
         let audio = document.getElementById(this.state.active_audio);
         let totalWidth = window.innerWidth - 120.0;
         let clickX = event.clientX - 100.0;
@@ -2896,7 +2896,7 @@ class AudioApp extends React.Component {
     };
 
     // playlist pane - toggle display
-    togglePlaylistPane = event => {
+    togglePlaylistPane = (event) => {
         let playlist_popup = document.getElementById("playlist-popup");
         if (playlist_popup.classList.contains("collapsed")) {
             playlist_popup.classList.remove("collapsed");
@@ -2920,7 +2920,7 @@ class AudioApp extends React.Component {
         }
     };
     // if user pressed play on a song in the playlist, jump to that song
-    changeCurrentIndex = position => {
+    changeCurrentIndex = (position) => {
         this.updatePlaycount();
         if (position === this.state.current_index) {
             return;
@@ -2979,7 +2979,7 @@ class AudioApp extends React.Component {
             next_id: getNextIndex(new_playlist, current_index),
         });
     };
-    onContextMenu = event => {
+    onContextMenu = (event) => {
         event.preventDefault();
         renderContextMenu(event, "playlist", "playlist-row");
     };
@@ -2993,7 +2993,7 @@ class AudioApp extends React.Component {
                     id: JSON.stringify(ids),
                 },
             })
-            .catch(function(error) {
+            .catch(function (error) {
                 console.log(error);
             });
 
@@ -3022,18 +3022,18 @@ class AudioApp extends React.Component {
         }
         this.setState({ child_data: temp, current_playlist: playlist });
     };
-    onScroll = event => {
+    onScroll = (event) => {
         let scrollY = event.currentTarget.scrollTop;
         if (!playlistTicking) {
             playlistTicking = true;
-            this.setState({ playlistScroll: scrollY }, function() {
+            this.setState({ playlistScroll: scrollY }, function () {
                 playlistTicking = false;
             });
         }
     };
     onNavbarTabClicked = (path: string, routeInfo: RouteInfo) => {
         this.props.history.push(path, routeInfo);
-    }
+    };
     albumClick = (album, album_artist) => {
         let request = {};
         request["base_url"] = "/api/search/songs";
@@ -3057,7 +3057,7 @@ class AudioApp extends React.Component {
         selected_navbar.style.pointerEvents = "none";
         selected_navbar.style.opacity = 0;
     };
-    albumClickPassthrough = event => {
+    albumClickPassthrough = (event) => {
         if (this.state.current_playlist.length > 0) {
             this.albumClick(
                 this.state.current_playlist[this.state.current_index].album,
@@ -3066,7 +3066,7 @@ class AudioApp extends React.Component {
             );
         }
     };
-    artistClick = artist => {
+    artistClick = (artist) => {
         let request = {};
         request["base_url"] = "/api/search/songs";
         request["base_params"] = {
@@ -3092,14 +3092,14 @@ class AudioApp extends React.Component {
         selected_navbar.style.pointerEvents = "none";
         selected_navbar.style.opacity = 0;
     };
-    artistClickPassthrough = event => {
+    artistClickPassthrough = (event) => {
         if (this.state.current_playlist.length > 0) {
             this.artistClick(
                 this.state.current_playlist[this.state.current_index].artist
             );
         }
     };
-    artistSongs = artist => {
+    artistSongs = (artist) => {
         let request = {};
         request["base_url"] = "/api/search/songs";
         request["base_params"] = {
@@ -3122,7 +3122,7 @@ class AudioApp extends React.Component {
         });
         removeActiveNavbar();
     };
-    updateNavigation = location => {
+    updateNavigation = (location) => {
         if (location.pathname === "/" || location.state == null) {
             this.setState({
                 child_type: "home",
@@ -3187,7 +3187,7 @@ class AudioApp extends React.Component {
                             );
                         })
                     )
-                    .catch(error => {
+                    .catch((error) => {
                         if (state.close_search_modal === true) {
                             this.closeModals(null);
                         }
@@ -3199,7 +3199,7 @@ class AudioApp extends React.Component {
                     .get(request["base_url"], {
                         params: request["base_params"],
                     })
-                    .then(response => {
+                    .then((response) => {
                         this.setState(
                             {
                                 child_type: state.child_type,
@@ -3222,7 +3222,7 @@ class AudioApp extends React.Component {
                             }
                         );
                     })
-                    .catch(error => {
+                    .catch((error) => {
                         if (state.close_search_modal === true) {
                             this.closeModals(null);
                         }
@@ -3232,7 +3232,7 @@ class AudioApp extends React.Component {
             }
         }
     };
-    closeModals = event => {
+    closeModals = (event) => {
         if (
             document
                 .getElementById("advanced-search-modal-content")
@@ -3258,7 +3258,7 @@ class AudioApp extends React.Component {
         }
         document.getElementById("modal-cover").classList.remove("modal-active"); // remove opacity cover
     };
-    handleAdvancedSearch = request => {
+    handleAdvancedSearch = (request) => {
         this.props.history.push("/advancedsearch", {
             child_type: "song-list",
             child_key: "advanced-search",
@@ -3296,18 +3296,18 @@ class AudioApp extends React.Component {
             .get("/api/search/songs", {
                 params: params,
             })
-            .then(response => {
+            .then((response) => {
                 this.setState({
                     edit_type: type,
                     edit_info: params,
                     edit_data: response.data.data,
                 });
             })
-            .catch(function(error) {
+            .catch(function (error) {
                 console.log(error);
             });
     };
-    openEditModal = event => {
+    openEditModal = (event) => {
         document.getElementById("edit-modal-loading").style.display = "block";
         document.getElementById("modal-cover").classList.add("modal-active");
         document.getElementById("edit-modal-content").style.visibility =
@@ -3342,7 +3342,7 @@ class AudioApp extends React.Component {
             next_id: getNextIndex(playlist, this.state.current_index),
         });
     };
-    openImage = image_id => event => {
+    openImage = (image_id) => (event) => {
         if (image_id != null) {
             window.open(
                 axios.defaults.baseURL +
@@ -3467,7 +3467,7 @@ class AudioApp extends React.Component {
             document.title = "React App";
         }
 
-        const RoutingDummyWithProps = props => {
+        const RoutingDummyWithProps = (props) => {
             return (
                 <RoutingDummy
                     updateNavigation={this.updateNavigation}
@@ -3534,7 +3534,7 @@ class AudioApp extends React.Component {
                         onSearchClick={this.onSearchClick}
                         onTabClicked={this.onNavbarTabClicked}
                     />
-                    <div style={{paddingTop: 5}}>{subcomponent}</div>
+                    <div style={{ paddingTop: 5 }}>{subcomponent}</div>
                     <div
                         style={{
                             width: "100%",
@@ -3594,12 +3594,12 @@ class AudioApp extends React.Component {
                             bottom: 15,
                             overflow: "auto",
                             pointerEvents: "auto",
-                            boxShadow: "1px 1px 10px " + active_color,
+                            boxShadow: "1px 1px 5px " + active_color,
                             width: 700,
                             height: "calc(100% - 200px)",
                             borderRadius: 0,
                             backgroundColor: "white",
-                            border: "1px solid " + active_color,
+                            border: "0px solid " + active_color,
                             fontSize: "0.9rem",
                         }}
                         onScroll={this.onScroll}
@@ -3956,7 +3956,7 @@ class RoutingDummy extends React.Component {
 }
 
 // upon any window click, remove all currently active dropdowns
-window.addEventListener("click", event => {
+window.addEventListener("click", (event) => {
     if (!event.target.matches(".dropdown-button")) {
         let dropdowns = document.getElementsByClassName("dropdown-menu show");
         while (dropdowns.length > 0) {
@@ -3965,7 +3965,7 @@ window.addEventListener("click", event => {
     }
 });
 
-window.addEventListener("scroll", event => {
+window.addEventListener("scroll", (event) => {
     let dropdowns = document.getElementsByClassName("dropdown-menu show");
     while (dropdowns.length > 0) {
         dropdowns[0].classList.remove("show");

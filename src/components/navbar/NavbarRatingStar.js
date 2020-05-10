@@ -5,7 +5,7 @@ import React from "react";
 import { ratingToTier } from "../../utils.js";
 
 type Props = {|
-    +onUpdateRating: number => void,
+    +onUpdateRating: (number) => void,
     +value: number,
     +value_to_display: number,
 |};

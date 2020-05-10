@@ -2,7 +2,7 @@
 
 import React from "react";
 
-import { getSelectedRows } from "../../componentUtils.js";
+import { getSelectedSongs } from "../../componentUtils.js";
 import NavbarRatingStar from "./NavbarRatingStar.js";
 
 import type { EditType, Id, Song } from "../../types.js";
@@ -25,7 +25,7 @@ export default class NavbarForSelectedItems extends React.Component<
 
     onAddNext = (event: SyntheticEvent<>) => {
         this.props.onAddToPlaylist(
-            getSelectedRows(
+            getSelectedSongsFromSource(
                 this.props.current_playlist,
                 this.props.child_data.data
             ),
@@ -35,7 +35,7 @@ export default class NavbarForSelectedItems extends React.Component<
 
     onAddToQueue = (event: SyntheticEvent<>) => {
         this.props.onAddToPlaylist(
-            getSelectedRows(
+            getSelectedSongsFromSource(
                 this.props.current_playlist,
                 this.props.child_data.data
             ),
@@ -46,7 +46,7 @@ export default class NavbarForSelectedItems extends React.Component<
     onEditInfo = (event: SyntheticEvent<>) => {
         this.props.onEditInfo(
             "song",
-            getSelectedRows(
+            getSelectedSongsFromSource(
                 this.props.current_playlist,
                 this.props.child_data.data
             )
@@ -76,7 +76,7 @@ export default class NavbarForSelectedItems extends React.Component<
 
     render() {
         const rating_tiers = [1, 64, 128, 196, 256];
-        const rating_star_components = rating_tiers.map(rating => {
+        const rating_star_components = rating_tiers.map((rating) => {
             return (
                 <NavbarRatingStar
                     key={rating}
@@ -147,5 +147,23 @@ export default class NavbarForSelectedItems extends React.Component<
                 </div>
             </nav>
         );
+    }
+}
+
+// if play next / add to queue are selected from navbar, we need to figure
+// out which song list the selection came from (playlist or song table)
+function getSelectedSongsFromSource(
+    playlist: Array<Song>,
+    song_list: Array<Song>
+): Array<Song> {
+    const selected: any = document.getElementsByClassName("table-selected");
+    if (selected.length === 0) {
+        return [];
+    }
+
+    if (selected[0].classList.contains("song-row")) {
+        return getSelectedSongs(song_list);
+    } else {
+        return getSelectedSongs(playlist);
     }
 }

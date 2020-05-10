@@ -1,6 +1,6 @@
 // @flow
 
-import type { Sort, SortableColumns } from "./column_types.js";
+import type { Sort, SortableColumns } from "./ColumnUtils.js";
 
 // Entities
 export type Id = number;
@@ -16,7 +16,6 @@ export type Song = {
     title: string,
     track_number: ?number,
 };
-
 
 // Network and Routing
 export type RequestParams = {

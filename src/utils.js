@@ -1,13 +1,31 @@
 // @flow
 
-// turn seconds into MM:SS
-export function formatTime(t: number): string {
-    t = Math.floor(t);
-    const minutes = Math.floor(t / 60);
-    const seconds = t - minutes * 60;
-    return minutes + ":" + str_pad_left(seconds, "0", 2);
+import type { Song } from "./Types.js";
+
+// ---------- component helpers ----------
+
+// remove active tab from navbar
+export function removeActiveNavbar(): void {
+    const navbarItems = document.getElementsByClassName(
+        "main-navbar-item active"
+    );
+    for (let i = 0; i < navbarItems.length; i++) {
+        navbarItems[i].classList.remove("active");
+    }
 }
 
+// given a list of songs, only return the subset of rows that are selected in the UI.
+export function getSelectedSongs(list: Array<Song>): Array<Song> {
+    const selected: any = document.getElementsByClassName("table-selected");
+    const songs = [];
+    for (let i = 0; i < selected.length; i++) {
+        const index = selected[i].rowIndex - 1;
+        songs.push(list[index]);
+    }
+    return songs;
+}
+
+// determine the index of the next song to be played
 export function getNextIndex(
     playlist: Array<{ id: number }>,
     current_index: number
@@ -25,17 +43,19 @@ export function getNextIndex(
     }
 }
 
-export function ratingToTier(value: number) {
-    return Math.floor((value + 32) / 64) + 1;
+// ---------- formatting ----------
+
+// turn seconds into MM:SS
+export function formatTime(t: number): string {
+    t = Math.floor(t);
+    const minutes = Math.floor(t / 60);
+    const seconds = t - minutes * 60;
+    return minutes + ":" + str_pad_left(seconds, "0", 2);
 }
 
-export function removeActiveNavbar(): void {
-    const navbarItems = document.getElementsByClassName(
-        "main-navbar-item active"
-    );
-    for (let i = 0; i < navbarItems.length; i++) {
-        navbarItems[i].classList.remove("active");
-    }
+// convert raw rating value to stars (1-5)
+export function ratingToTier(value: number) {
+    return Math.floor((value + 32) / 64) + 1;
 }
 
 /**

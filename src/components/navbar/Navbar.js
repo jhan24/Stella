@@ -7,7 +7,7 @@ import NavbarTabs from "./NavbarTabs.js";
 import { active_color } from "../../index.js";
 
 import type { SearchType } from "./NavbarSearchTypeButton.js";
-import type { ChildType, EditType, Id, RouteInfo, Song } from "../../types.js";
+import type { ChildType, EditType, Id, RouteInfo, Song } from "../../Types.js";
 
 type Props = {|
     child_data: any,

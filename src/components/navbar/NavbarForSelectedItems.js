@@ -2,10 +2,10 @@
 
 import React from "react";
 
-import { getSelectedSongs } from "../../componentUtils.js";
+import { getSelectedSongs } from "../../Utils.js";
 import NavbarRatingStar from "./NavbarRatingStar.js";
 
-import type { EditType, Id, Song } from "../../types.js";
+import type { EditType, Id, Song } from "../../Types.js";
 
 type Props = {|
     +child_data: any,

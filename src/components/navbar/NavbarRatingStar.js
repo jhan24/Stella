@@ -2,7 +2,7 @@
 
 import React from "react";
 
-import { ratingToTier } from "../../utils.js";
+import { ratingToTier } from "../../Utils.js";
 
 type Props = {|
     +onUpdateRating: (number) => void,

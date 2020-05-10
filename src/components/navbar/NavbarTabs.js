@@ -1,8 +1,8 @@
 // @flow
 
 import React from "react";
-import { removeActiveNavbar } from "../../utils.js";
-import type { ChildType, RouteInfo } from "../../types.js";
+import { removeActiveNavbar } from "../../Utils.js";
+import type { ChildType, RouteInfo } from "../../Types.js";
 
 type Props = {|
     onTabClicked: (string, RouteInfo) => void,

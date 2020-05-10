@@ -24,20 +24,20 @@ import {
     editable_columns,
     propagating_columns,
     searchable_columns,
-} from "./column_types.js";
+} from "./ColumnUtils.js";
 import {
     formatTime,
     getNextIndex,
+    getSelectedSongs,
     removeActiveNavbar,
     shuffle,
-} from "./utils.js";
-import { getSelectedSongs } from "./componentUtils.js";
+} from "./Utils.js";
 
 // React components
 import Home from "./components/home/Home.js";
 import Navbar from "./components/navbar/Navbar.js";
 
-import type { RouteInfo } from "./types.js";
+import type { RouteInfo } from "./Types.js";
 
 let playlistCount = 0;
 let playlistTicking = false;
